@@ -33,8 +33,9 @@ export type TasksStore = {
     addTask: (listId: ListType["id"], task?: TaskType) => TaskType;
     removeTask: (id: TaskType["id"]) => void;
     toggleCompleted: (id: TaskType["id"]) => void;
-    updateTask: (id: TaskType["id"], updatedTask: TaskType) => void;
+    updateTask: (id: TaskType["id"], content: TaskType["content"]) => void;
     getListTasks: (listId: ListType["id"]) => TaskType[];
+    getTaskById: (id: TaskType["id"]) => TaskType;
   };
 };
 
@@ -109,25 +110,32 @@ export const useTasksStore = create<TasksStore>((set, get) => ({
       set((state) => ({
         tasks: state.tasks.filter((task) => task.id !== id)
       })),
-    toggleCompleted: (id) =>
+    toggleCompleted: (id) => {
+      let completed;
       set((state) => {
         return {
           tasks: state.tasks.map((task) => {
             if (task.id === id) {
+              completed = !task.completed;
               return {
                 ...task,
-                completed: !task.completed
+                completed: completed
               };
             }
             return task;
           })
         };
-      }),
-    updateTask: (id, updatedTask) =>
+      });
+      return completed;
+    },
+    updateTask: (id, content) =>
       set((state) => ({
         tasks: state.tasks.map((task) => {
           if (task.id === id) {
-            return updatedTask;
+            return {
+              ...task,
+              content
+            };
           }
           return task;
         })
@@ -135,6 +143,10 @@ export const useTasksStore = create<TasksStore>((set, get) => ({
     getListTasks: (listId) => {
       const tasks = get().tasks;
       return tasks.filter((task) => task.listId === listId);
+    },
+    getTaskById: (id) => {
+      const tasks = get().tasks;
+      return tasks.find((task) => task.id === id) as TaskType;
     }
   }
 }));

@@ -38,3 +38,60 @@ export const createTask = async (listId: string, content?: string) => {
     return newTask;
   }
 };
+
+export const completeTask = async (id: string) => {
+  const { toggleCompleted } = useTasksStore.getState().taskActions;
+
+  const completed = toggleCompleted(id);
+
+  const res = await fetch("/api/tasks", {
+    method: "PUT",
+    body: JSON.stringify({ id, completed }),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
+
+  if (res.ok) {
+    const updatedTask = await res.json();
+    return updatedTask;
+  }
+};
+
+export const updateTask = async (id: string, content: string) => {
+  const { updateTask } = useTasksStore.getState().taskActions;
+
+  updateTask(id, content);
+
+  const res = await fetch("/api/tasks", {
+    method: "PUT",
+    body: JSON.stringify({ id, content }),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
+
+  if (res.ok) {
+    const updatedTask = await res.json();
+    return updatedTask;
+  }
+};
+
+export const deleteTask = async (id: string) => {
+  const { removeTask } = useTasksStore.getState().taskActions;
+
+  removeTask(id);
+
+  const res = await fetch("/api/tasks", {
+    method: "DELETE",
+    body: JSON.stringify({ id }),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
+
+  if (res.ok) {
+    const deletedTask = await res.json();
+    return deletedTask;
+  }
+};

@@ -1,4 +1,9 @@
-import { createTask } from "@/lib/api/tasks";
+import {
+  completeTask,
+  createTask,
+  deleteTask,
+  updateTask
+} from "@/lib/api/tasks";
 import { dispatchEvent } from "@/lib/utils";
 import { TaskType, useTaskActions, useTasksStore } from "@/store";
 import { tasks } from "@prisma/client";
@@ -11,7 +16,7 @@ type TaskProps = {
 };
 
 export const Task: FC<TaskProps> = ({ taskData }) => {
-  const { removeTask, toggleCompleted, updateTask, addTask } = useTaskActions();
+  const { removeTask, getTaskById } = useTaskActions();
 
   const timer = useRef<NodeJS.Timeout>();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -23,7 +28,7 @@ export const Task: FC<TaskProps> = ({ taskData }) => {
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     // if there isn't a value and key is delete, delete the task
     if (!e.currentTarget.value && e.key === "Backspace") {
-      deleteTask();
+      handleDeleteButton();
       return;
     }
 
@@ -54,36 +59,29 @@ export const Task: FC<TaskProps> = ({ taskData }) => {
 
     if (timer.current) clearTimeout(timer.current);
 
-    timer.current = setTimeout(() => {
-      updateTask(taskData.id, {
-        ...taskData,
-        content: newValue
+    timer.current = setTimeout(async () => {
+      console.log("updating task", newValue);
+      await updateTask(taskData.id, newValue);
+    }, 500);
+  };
+
+  const handleComplete = async (id: tasks["id"]) => {
+    await completeTask(id);
+    setCompleted(getTaskById(id).completed);
+  };
+
+  const handleDeleteButton = useCallback(async () => {
+    if (confirmDelete || !taskData.content) {
+      await deleteTask(taskData.id);
+
+      dispatchEvent("removedtask", {
+        listId: taskData.listId,
+        taskId: taskData.id
       });
-    }, 100);
-  };
-
-  const handleComplete = (id: tasks["id"]) => {
-    setCompleted(!completed);
-    toggleCompleted(id);
-  };
-
-  const deleteTask = useCallback(() => {
-    removeTask(taskData.id);
-
-    dispatchEvent("removedtask", {
-      listId: taskData.listId,
-
-      taskId: taskData.id
-    });
-  }, [removeTask, taskData.id, taskData.listId]);
-
-  const handleDeleteButton = useCallback(() => {
-    if (confirmDelete) {
-      deleteTask();
     } else {
       setConfirmDelete(true);
     }
-  }, [confirmDelete, deleteTask]);
+  }, [confirmDelete, taskData.id, taskData.listId, taskData.content]);
 
   return (
     <div
