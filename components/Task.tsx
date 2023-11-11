@@ -1,3 +1,4 @@
+import { createTask } from "@/lib/api/tasks";
 import { dispatchEvent } from "@/lib/utils";
 import { TaskType, useTaskActions, useTasksStore } from "@/store";
 import { tasks } from "@prisma/client";
@@ -19,7 +20,7 @@ export const Task: FC<TaskProps> = ({ taskData }) => {
 
   const [confirmDelete, setConfirmDelete] = useState(false);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     // if there isn't a value and key is delete, delete the task
     if (!e.currentTarget.value && e.key === "Backspace") {
       deleteTask();
@@ -34,10 +35,10 @@ export const Task: FC<TaskProps> = ({ taskData }) => {
         e.stopPropagation();
         e.preventDefault();
 
-        const newTask = addTask(taskData.listId);
+        const newTask = await createTask(taskData.listId);
+
         dispatchEvent("newtask", {
           listId: taskData.listId,
-
           taskId: newTask.id
         });
       }

@@ -3,20 +3,16 @@ import { dispatchEvent } from "@/lib/utils";
 import { FC, useRef } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import { createId } from "@paralleldrive/cuid2";
+import { createTask } from "@/lib/api/tasks";
 
 type NewItemInputProps = {
   listId: ListType["id"];
-  completed?: boolean;
 };
 
-export const NewItemInput: FC<NewItemInputProps> = ({
-  listId,
-  completed = false
-}) => {
-  const { addTask } = useTaskActions();
+export const NewItemInput: FC<NewItemInputProps> = ({ listId }) => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
 
@@ -24,12 +20,7 @@ export const NewItemInput: FC<NewItemInputProps> = ({
         return;
       }
 
-      const newTask = addTask(listId, {
-        id: createId(),
-        content: e.currentTarget.value,
-        completed: false,
-        listId
-      });
+      const newTask = await createTask(listId, e.currentTarget.value);
 
       dispatchEvent("newtask", {
         listId: newTask.listId,
