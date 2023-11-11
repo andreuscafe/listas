@@ -1,12 +1,13 @@
 import { List } from "@/components/List";
 import {
   ListType,
+  TaskType,
   useListActions,
   useLists,
   useTaskActions,
   useTasksStore
 } from "@/store";
-import { lists, tasks } from "@prisma/client";
+import { list, task } from "@prisma/client";
 import Head from "next/head";
 import { useCallback, useEffect, useState } from "react";
 
@@ -30,8 +31,8 @@ export default function App({
   listsData,
   tasksData
 }: {
-  listsData: lists[];
-  tasksData: tasks[];
+  listsData: list[];
+  tasksData: task[];
 }) {
   const lists = useLists();
   const { setLists } = useListActions();
@@ -55,7 +56,7 @@ export default function App({
         listId: t.listId,
         createdAt: t.createdAt,
         completed: t.completed
-      }))
+      })) as TaskType[]
     );
   }, [listsData, tasksData, setLists, setTasks]);
 
@@ -94,8 +95,8 @@ export default function App({
 }
 
 export const getServerSideProps = async () => {
-  const listsData: lists[] = await prisma.lists.findMany();
-  const tasksData: tasks[] = await prisma.tasks.findMany();
+  const listsData: list[] = await prisma.list.findMany();
+  const tasksData: task[] = await prisma.task.findMany();
 
   return {
     props: {

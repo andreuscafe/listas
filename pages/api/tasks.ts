@@ -1,23 +1,23 @@
 import prisma from "@/lib/prisma";
-import { tasks } from "@prisma/client";
+import { task } from "@prisma/client";
 
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<tasks[] | tasks | { error: string }>
+  res: NextApiResponse<task[] | task | { error: string }>
 ) {
   if (req.method === "GET") {
-    const response = await prisma.tasks.findMany();
+    const response = await prisma.task.findMany();
 
     res.status(200).json(response);
   }
 
   if (req.method === "POST") {
-    const task = req.body as tasks;
+    const task = req.body as task;
 
-    const response = await prisma.tasks.upsert({
+    const response = await prisma.task.upsert({
       where: { id: task.id || "" },
       update: {},
       create: {
@@ -31,9 +31,9 @@ export default async function handler(
   }
 
   if (req.method === "PUT") {
-    const task = req.body as tasks;
+    const task = req.body as task;
 
-    const response = await prisma.tasks.update({
+    const response = await prisma.task.update({
       where: { id: task.id },
       data: {
         content: task.content,
@@ -46,7 +46,7 @@ export default async function handler(
   if (req.method === "DELETE") {
     const { id } = req.body as { id: string };
 
-    const response = await prisma.tasks.delete({
+    const response = await prisma.task.delete({
       where: { id }
     });
     return res.status(200).json(response);

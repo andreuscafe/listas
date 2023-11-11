@@ -11,16 +11,18 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
-model lists {
-  id        String      @id @default(cuid())
+model list {
+  id        String   @id @default(cuid())
   title     String
   createdAt DateTime @default(now())
+  tasks     task[]
 }
 
-model tasks {
-  id        String      @id @default(cuid())
+model task {
+  id        String   @id @default(cuid())
   content   String
   createdAt DateTime @default(now())
+  completed Boolean  @default(false)
+  list      list     @relation(fields: [listId], references: [id])
   listId    String
-  completed Boolean @default(false)
 }

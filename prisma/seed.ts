@@ -2,7 +2,7 @@ import prisma from "../lib/prisma";
 
 async function main() {
   const response = await Promise.all([
-    prisma.lists.upsert({
+    await prisma.list.upsert({
       where: { id: "test1" },
       update: {},
       create: {
@@ -10,22 +10,30 @@ async function main() {
         title: "Lista de seed"
       }
     }),
-    prisma.tasks.upsert({
+    prisma.task.upsert({
       where: { id: "test1" },
       update: {},
       create: {
         id: "test1",
         content: "Tarea de seed",
-        listId: "test1"
+        list: {
+          connect: {
+            id: "test1"
+          }
+        }
       }
     }),
-    await prisma.tasks.upsert({
+    await prisma.task.upsert({
       where: { id: "test2" },
       update: {},
       create: {
         id: "test2",
         content: "Segunda tarea de seed",
-        listId: "test1"
+        list: {
+          connect: {
+            id: "test1"
+          }
+        }
       }
     })
   ]);

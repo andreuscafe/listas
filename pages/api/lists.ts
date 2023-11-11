@@ -1,23 +1,23 @@
 import prisma from "@/lib/prisma";
-import { lists } from "@prisma/client";
+import { list } from "@prisma/client";
 
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<lists[] | lists | { error: string }>
+  res: NextApiResponse<list[] | list | { error: string }>
 ) {
   if (req.method === "GET") {
-    const response = await prisma.lists.findMany();
+    const response = await prisma.list.findMany();
 
     res.status(200).json(response);
   }
 
   if (req.method === "POST") {
-    const list = req.body as lists;
+    const list = req.body as list;
 
-    const response = await prisma.lists.upsert({
+    const response = await prisma.list.upsert({
       where: { id: list.id || "" },
       update: {},
       create: {
@@ -29,9 +29,9 @@ export default async function handler(
   }
 
   if (req.method === "PUT") {
-    const list = req.body as lists;
+    const list = req.body as list;
 
-    const response = await prisma.lists.update({
+    const response = await prisma.list.update({
       where: { id: list.id },
       data: {
         title: list.title
@@ -43,7 +43,7 @@ export default async function handler(
   if (req.method === "DELETE") {
     const { id } = req.body as { id: string };
 
-    const response = await prisma.lists.delete({
+    const response = await prisma.list.delete({
       where: { id }
     });
     return res.status(200).json(response);

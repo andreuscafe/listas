@@ -6,7 +6,7 @@ import {
 } from "@/lib/api/tasks";
 import { dispatchEvent } from "@/lib/utils";
 import { TaskType, useTaskActions, useTasksStore } from "@/store";
-import { tasks } from "@prisma/client";
+import { task } from "@prisma/client";
 import { FC, useCallback, useRef, useState } from "react";
 import { BiCheck, BiX } from "react-icons/bi";
 import ReactTextareaAutosize from "react-textarea-autosize";
@@ -65,7 +65,7 @@ export const Task: FC<TaskProps> = ({ taskData }) => {
     }, 500);
   };
 
-  const handleComplete = async (id: tasks["id"]) => {
+  const handleComplete = async (id: task["id"]) => {
     await completeTask(id);
     setCompleted(getTaskById(id).completed);
   };
