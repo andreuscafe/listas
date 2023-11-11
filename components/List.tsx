@@ -1,82 +1,89 @@
-import { ListType, useTasksStore } from "@/store";
-import { FC, useCallback, useEffect, useState } from "react";
 import {
-  BiChevronDown,
-  BiCollapse,
-  BiFolder,
-  BiFolderOpen,
-  BiMinus,
-  BiOutline,
-  BiStrikethrough,
-  BiTrash,
-  BiX
-} from "react-icons/bi";
-import { ListItem } from "./ListItem";
+  ListType,
+  useListActions,
+  useTaskActions,
+  useTasksStore
+} from "@/store";
+import { FC, useCallback, useEffect, useState } from "react";
+import { BiChevronDown, BiX } from "react-icons/bi";
+import { Task } from "./Task";
 import { NewItemInput } from "./NewItemInput";
+import { deleteListById } from "@/lib/api/lists";
 
 type ListProps = {
   listData: ListType;
 };
 
 export const List: FC<ListProps> = ({ listData }) => {
-  const [tasks, setTasks] = useState(
-    useTasksStore.getState().getListTasks(listData.id)
-  );
-  const { updateListTitle, deleteList, setFoldedList } =
-    useTasksStore.getState();
+  const { updateListTitle, setFoldedList } = useListActions();
+  const { getListTasks } = useTaskActions();
+
+  const [tasks, setTasks] = useState(getListTasks(listData.id));
+
   const [confirmDelete, setConfirmDelete] = useState(false);
-
-  const refreshTasks = useCallback(
-    (e: CustomEventInit) => {
-      if (e.detail.listId === listData.id) {
-        setTasks(useTasksStore.getState().getListTasks(listData.id));
-      }
-
-      setTimeout(() => {
-        // Focus textarea
-        if (e.detail.taskId) {
-          const textarea = document.querySelector(
-            `textarea[data-taskid="${e.detail.taskId}"]`
-          ) as HTMLTextAreaElement;
-
-          if (textarea) {
-            textarea.focus();
-          } else {
-            const lastTask = document.querySelector(
-              `textarea[data-taskid="${tasks[tasks.length - 1]?.id}"]`
-            ) as HTMLTextAreaElement;
-
-            if (lastTask) {
-              lastTask.focus();
-            }
-          }
-        }
-      }, 10);
-    },
-    [listData.id, tasks]
-  );
 
   const handleDeleteList = useCallback(() => {
     if (confirmDelete) {
-      deleteList(listData.id);
+      deleteListById(listData.id);
     } else {
       setConfirmDelete(true);
     }
-  }, [confirmDelete, deleteList, listData.id]);
+  }, [confirmDelete, listData.id]);
+
+  const refreshTasks = useCallback(
+    (e: CustomEvent) => {
+      if (e.detail.listId === listData.id) {
+        setTasks(getListTasks(listData.id));
+
+        setTimeout(() => {
+          // Focus textarea
+          if (e.type === "newtask") {
+            const textarea = document.querySelector(
+              `textarea[data-taskid="${e.detail.taskId}"]`
+            ) as HTMLTextAreaElement;
+
+            if (textarea) {
+              textarea.focus();
+            }
+          } else if (e.type === "removedtask") {
+            console.log(
+              "removedtask, intentando pegarle a:",
+              tasks.indexOf(e.detail.taskId)
+            );
+
+            const textarea = document.querySelector(
+              `textarea[data-taskid="${tasks[tasks.length - 2].id}"]`
+            ) as HTMLTextAreaElement;
+
+            if (textarea) {
+              textarea.focus();
+            }
+          }
+        }, 10);
+      }
+    },
+    [getListTasks, listData.id, tasks]
+  );
 
   useEffect(() => {
     if (window) {
-      window.addEventListener("newtask", refreshTasks);
-      window.addEventListener("removedtask", refreshTasks);
+      window.removeEventListener("newtask", refreshTasks as EventListener);
+      window.removeEventListener("removedtask", refreshTasks as EventListener);
+
+      window.addEventListener("newtask", refreshTasks as EventListener);
+      window.addEventListener("removedtask", refreshTasks as EventListener);
     }
 
     return () => {
       if (window) {
-        window.removeEventListener("newtask", refreshTasks);
-        window.addEventListener("removedtask", refreshTasks);
+        window.removeEventListener("newtask", refreshTasks as EventListener);
+        window.removeEventListener(
+          "removedtask",
+          refreshTasks as EventListener
+        );
       }
     };
-  }, [tasks, refreshTasks]);
+  }, [refreshTasks]);
 
   return (
     <section className="p-6 mb-10 rounded-2xl backdrop-blur-xl border-[2px] border-neutral-700 relative">
@@ -122,20 +129,15 @@ export const List: FC<ListProps> = ({ listData }) => {
         </button>
       </div>
 
-      {/* <div className="pb-8 mb-8 border-b-[2px] border-neutral-700 flex justify-between">
-        <span>{listData.title}</span>
-      </div> */}
       {/* Tasks list */}
       <ul
         className={`flex flex-col justify-start gap-2 transition-all duration-300 overflow-auto ${
           listData.folded ? "max-h-0 overflow-hidden" : "max-h-[500px]"
         }`}
       >
-        {tasks
-          .filter((t) => !t.parentId)
-          .map((task) => (
-            <ListItem key={task.id} taskData={task} />
-          ))}
+        {tasks.map((task) => (
+          <Task key={task.id} taskData={task} />
+        ))}
 
         {!tasks.length && <NewItemInput listId={listData.id} />}
       </ul>

@@ -12,7 +12,7 @@ export const dispatchEvent = (
   detail: any
 ) => {
   setTimeout(() => {
-    // console.info("dispatching event", eventName, detail);
+    console.info("dispatching event", eventName, detail);
     window.dispatchEvent(new CustomEvent(eventName, { detail }));
   }, 0);
 };

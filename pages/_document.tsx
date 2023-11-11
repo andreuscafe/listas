@@ -4,7 +4,7 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head />
-      <body className="bg-[#0A0A0A] text-[#CECECE]">
+      <body className="bg-[#0A0A0A] text-[#CECECE]" onClick={() => {}}>
         <Main />
         <NextScript />
       </body>

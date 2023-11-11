@@ -1,46 +1,42 @@
-import prisma from '../lib/prisma'
+import prisma from "../lib/prisma";
 
 async function main() {
   const response = await Promise.all([
-    prisma.users.upsert({
-      where: { email: 'rauchg@vercel.com' },
+    prisma.lists.upsert({
+      where: { id: "test1" },
       update: {},
       create: {
-        name: 'Guillermo Rauch',
-        email: 'rauchg@vercel.com',
-        image:
-          'https://pbs.twimg.com/profile_images/1576257734810312704/ucxb4lHy_400x400.jpg',
-      },
+        id: "test1",
+        title: "Lista de seed"
+      }
     }),
-    prisma.users.upsert({
-      where: { email: 'lee@vercel.com' },
+    prisma.tasks.upsert({
+      where: { id: "test1" },
       update: {},
       create: {
-        name: 'Lee Robinson',
-        email: 'lee@vercel.com',
-        image:
-          'https://pbs.twimg.com/profile_images/1587647097670467584/adWRdqQ6_400x400.jpg',
-      },
+        id: "test1",
+        content: "Tarea de seed",
+        listId: "test1"
+      }
     }),
-    await prisma.users.upsert({
-      where: { email: 'stey@vercel.com' },
+    await prisma.tasks.upsert({
+      where: { id: "test2" },
       update: {},
       create: {
-        name: 'Steven Tey',
-        email: 'stey@vercel.com',
-        image:
-          'https://pbs.twimg.com/profile_images/1506792347840888834/dS-r50Je_400x400.jpg',
-      },
-    }),
-  ])
-  console.log(response)
+        id: "test2",
+        content: "Segunda tarea de seed",
+        listId: "test1"
+      }
+    })
+  ]);
+  console.log(response);
 }
 main()
   .then(async () => {
-    await prisma.$disconnect()
+    await prisma.$disconnect();
   })
   .catch(async (e) => {
-    console.error(e)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });

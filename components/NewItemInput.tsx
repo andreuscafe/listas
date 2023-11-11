@@ -1,7 +1,8 @@
-import { ListType, useTasksStore } from "@/store";
+import { ListType, useTaskActions, useTasksStore } from "@/store";
 import { dispatchEvent } from "@/lib/utils";
 import { FC, useRef } from "react";
 import TextareaAutosize from "react-textarea-autosize";
+import { createId } from "@paralleldrive/cuid2";
 
 type NewItemInputProps = {
   listId: ListType["id"];
@@ -12,7 +13,7 @@ export const NewItemInput: FC<NewItemInputProps> = ({
   listId,
   completed = false
 }) => {
-  const addTask = useTasksStore.getState().addTask;
+  const { addTask } = useTaskActions();
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -24,16 +25,14 @@ export const NewItemInput: FC<NewItemInputProps> = ({
       }
 
       const newTask = addTask(listId, {
-        id: Date.now(),
+        id: createId(),
         content: e.currentTarget.value,
         completed: false,
-        subTasks: [],
         listId
       });
 
       dispatchEvent("newtask", {
         listId: newTask.listId,
-        parentId: newTask.parentId,
         taskId: newTask.id
       });
 

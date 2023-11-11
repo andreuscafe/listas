@@ -1,8 +1,17 @@
 import { List } from "@/components/List";
-import { ListType, useTasksStore } from "@/store";
-import prisma from "@/lib/prisma";
+import {
+  ListType,
+  useListActions,
+  useLists,
+  useTaskActions,
+  useTasksStore
+} from "@/store";
+import { lists, tasks } from "@prisma/client";
 import Head from "next/head";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+
+import prisma from "@/lib/prisma";
+import { createList } from "@/lib/api/lists";
 
 const phrases = [
   "La vida es una colección de momentos, asegúrate de vivir cada uno.",
@@ -17,38 +26,46 @@ const phrases = [
   "La vida es frágil, valora cada momento y a las personas que amas."
 ];
 
-export default function App() {
-  const [loaded, setLoaded] = useState(false);
-  const { lists } = useTasksStore((state) => ({
-    lists: state.lists
-  }));
-  const addList = useTasksStore.getState().addList;
+export default function App({
+  listsData,
+  tasksData
+}: {
+  listsData: lists[];
+  tasksData: tasks[];
+}) {
+  const lists = useLists();
+  const { setLists } = useListActions();
+  const { setTasks } = useTaskActions();
   const [clientPhrase, setClientPhrase] = useState(phrases[0]);
-  const [clientLists, setClientLists] = useState<ListType[]>([]);
 
   useEffect(() => {
-    setClientLists(lists);
-  }, [lists]);
+    setLists(
+      listsData.map((l) => ({
+        id: l.id,
+        title: l.title,
+        createdAt: l.createdAt,
+        folded: false
+      })) as ListType[]
+    );
+
+    setTasks(
+      tasksData.map((t) => ({
+        id: t.id,
+        content: t.content,
+        listId: t.listId,
+        createdAt: t.createdAt,
+        completed: t.completed
+      }))
+    );
+  }, [listsData, tasksData, setLists, setTasks]);
 
   useEffect(() => {
     setClientPhrase(phrases[Math.floor(Math.random() * phrases.length)]);
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const users = await fetch("/api/hello").then((res) => res.json());
-
-      console.log({ users });
-    };
-
-    if (!loaded) {
-      fetchData();
-    }
-
-    return () => {
-      setLoaded(false);
-    };
-  }, [loaded]);
+  const handleCreateList = useCallback(() => {
+    createList();
+  }, []);
 
   return (
     <>
@@ -61,13 +78,13 @@ export default function App() {
           <p className="text-neutral-600">{clientPhrase}</p>
         </section>
 
-        {clientLists?.map((list) => (
+        {lists?.map((list) => (
           <List key={list.id} listData={list} />
         ))}
 
         <button
           className="w-full py-6 opacity-40 hover:opacity-100 transition-opacity rounded-2xl border-[2px] border-white border-opacity-20"
-          onClick={() => addList()}
+          onClick={handleCreateList}
         >
           Agregar lista
         </button>
@@ -75,3 +92,15 @@ export default function App() {
     </>
   );
 }
+
+export const getServerSideProps = async () => {
+  const listsData: lists[] = await prisma.lists.findMany();
+  const tasksData: tasks[] = await prisma.tasks.findMany();
+
+  return {
+    props: {
+      listsData: JSON.parse(JSON.stringify(listsData)),
+      tasksData: JSON.parse(JSON.stringify(tasksData))
+    }
+  };
+};
