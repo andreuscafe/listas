@@ -1,4 +1,4 @@
-import { lists } from "@prisma/client";
+import { list } from "@prisma/client";
 import { createId } from "@paralleldrive/cuid2";
 import { useTasksStore } from "@/store";
 
@@ -18,13 +18,32 @@ export const createList = async () => {
     id: createId(),
     title: "Nueva lista",
     createdAt: new Date()
-  } as lists;
+  } as list;
 
   addList(newList);
 
   const res = await fetch("/api/lists", {
     method: "POST",
     body: JSON.stringify(newList),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
+
+  if (res.ok) {
+    const newList = await res.json();
+    return newList;
+  }
+};
+
+export const updateList = async (id: string, title: string) => {
+  const { updateListTitle } = useTasksStore.getState().listActions;
+
+  updateListTitle(id, title);
+
+  const res = await fetch("/api/lists", {
+    method: "PUT",
+    body: JSON.stringify({ id, title }),
     headers: {
       "Content-Type": "application/json"
     }

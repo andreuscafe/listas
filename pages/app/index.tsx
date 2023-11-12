@@ -40,15 +40,17 @@ export default function App({ listsData }: AppProps) {
   console.log("listsData", listsData[1].tasks);
 
   useEffect(() => {
-    console.log("SETTING LISTS");
-
     setLists(
-      listsData.map((l) => ({
-        id: l.id,
-        title: l.title,
-        createdAt: l.createdAt,
-        folded: false
-      })) as ListType[]
+      listsData
+        .map((l) => ({
+          id: l.id,
+          title: l.title,
+          createdAt: new Date(l.createdAt),
+          folded: false
+        }))
+        .sort(
+          (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
+        ) as ListType[]
     );
 
     setTasks(

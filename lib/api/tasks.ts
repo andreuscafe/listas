@@ -1,6 +1,6 @@
 import { createId } from "@paralleldrive/cuid2";
 import { useTasksStore } from "@/store";
-import { tasks } from "@prisma/client";
+import { task } from "@prisma/client";
 
 export const getTasks = async () => {
   const res = await fetch("/api/tasks");
@@ -21,7 +21,7 @@ export const createTask = async (listId: string, content?: string) => {
     title: "Nueva lista",
     createdAt: new Date(),
     completed: false
-  } as unknown as tasks;
+  } as unknown as task;
 
   addTask(listId, newTask);
 

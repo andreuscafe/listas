@@ -1,14 +1,9 @@
-import {
-  ListType,
-  useListActions,
-  useTaskActions,
-  useTasksStore
-} from "@/store";
-import { FC, memo, useCallback, useEffect, useState } from "react";
+import { ListType, useListActions, useTaskActions } from "@/store";
+import { FC, memo, useCallback, useEffect, useRef, useState } from "react";
 import { BiChevronDown, BiX } from "react-icons/bi";
 import { Task } from "./Task";
 import { NewItemInput } from "./NewItemInput";
-import { deleteListById } from "@/lib/api/lists";
+import { deleteListById, updateList } from "@/lib/api/lists";
 
 type ListProps = {
   listData: ListType;
@@ -17,12 +12,16 @@ type ListProps = {
 export const List: FC<ListProps> = memo(({ listData }) => {
   console.log("rendering list", listData.id);
 
-  const { updateListTitle, setFoldedList } = useListActions();
+  const [listTitle, setListTitle] = useState(listData.title);
+
+  const { setFoldedList } = useListActions();
   const { getListTasks } = useTaskActions();
 
   const [tasks, setTasks] = useState(getListTasks(listData.id));
 
   const [confirmDelete, setConfirmDelete] = useState(false);
+
+  const timer = useRef<NodeJS.Timeout>();
 
   const handleDeleteList = useCallback(() => {
     if (confirmDelete) {
@@ -67,6 +66,22 @@ export const List: FC<ListProps> = memo(({ listData }) => {
     [getListTasks, listData.id, tasks]
   );
 
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.currentTarget.value;
+
+    if (!e.currentTarget.value) {
+      return;
+    }
+
+    setListTitle(newValue);
+    if (timer.current) clearTimeout(timer.current);
+
+    timer.current = setTimeout(async () => {
+      console.log("updating title", newValue);
+      await updateList(listData.id, newValue);
+    }, 500);
+  };
+
   useEffect(() => {
     if (window) {
       window.removeEventListener("newtask", refreshTasks as EventListener);
@@ -90,11 +105,9 @@ export const List: FC<ListProps> = memo(({ listData }) => {
   return (
     <section className="p-6 mb-10 rounded-2xl backdrop-blur-xl border-[2px] border-neutral-700 relative">
       <div className="block absolute top-0 left-4 -translate-y-1/2 bg-[#0A0A0A]">
-        <span className="p-4 whitespace-pre opacity-0">{listData.title}</span>
+        <span className="p-4 whitespace-pre opacity-0">{listTitle}</span>
         <input
-          onChange={(e) => {
-            updateListTitle(listData.id, e.currentTarget.value || "");
-          }}
+          onChange={handleTitleChange}
           className="p-0 text-center bg-transparent absolute top-0 left-0 w-full h-full outline-none"
           defaultValue={listData.title}
           autoComplete="off"
