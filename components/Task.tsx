@@ -7,7 +7,7 @@ import {
 import { dispatchEvent } from "@/lib/utils";
 import { TaskType, useTaskActions, useTasksStore } from "@/store";
 import { task } from "@prisma/client";
-import { FC, useCallback, useRef, useState } from "react";
+import { FC, memo, useCallback, useRef, useState } from "react";
 import { BiCheck, BiX } from "react-icons/bi";
 import ReactTextareaAutosize from "react-textarea-autosize";
 
@@ -15,7 +15,9 @@ type TaskProps = {
   taskData: TaskType;
 };
 
-export const Task: FC<TaskProps> = ({ taskData }) => {
+export const Task: FC<TaskProps> = memo(({ taskData }) => {
+  console.log("rendering task", taskData.id);
+
   const { removeTask, getTaskById } = useTaskActions();
 
   const timer = useRef<NodeJS.Timeout>();
@@ -147,4 +149,6 @@ export const Task: FC<TaskProps> = ({ taskData }) => {
       </div>
     </div>
   );
-};
+});
+
+Task.displayName = "Task";

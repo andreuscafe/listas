@@ -27,19 +27,21 @@ const phrases = [
   "La vida es frágil, valora cada momento y a las personas que amas."
 ];
 
-export default function App({
-  listsData,
-  tasksData
-}: {
-  listsData: list[];
-  tasksData: task[];
-}) {
+type AppProps = {
+  listsData: (list & { tasks: task[] })[];
+};
+
+export default function App({ listsData }: AppProps) {
   const lists = useLists();
   const { setLists } = useListActions();
   const { setTasks } = useTaskActions();
   const [clientPhrase, setClientPhrase] = useState(phrases[0]);
 
+  console.log("listsData", listsData[1].tasks);
+
   useEffect(() => {
+    console.log("SETTING LISTS");
+
     setLists(
       listsData.map((l) => ({
         id: l.id,
@@ -50,15 +52,22 @@ export default function App({
     );
 
     setTasks(
-      tasksData.map((t) => ({
-        id: t.id,
-        content: t.content,
-        listId: t.listId,
-        createdAt: t.createdAt,
-        completed: t.completed
-      })) as TaskType[]
+      listsData
+        .map(
+          (l) =>
+            l.tasks
+              .map((t) => ({
+                id: t.id,
+                content: t.content,
+                completed: t.completed,
+                createdAt: new Date(t.createdAt), // convert to Date object
+                listId: t.listId
+              }))
+              .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()) // use getTime() to compare dates
+        )
+        .flat()
     );
-  }, [listsData, tasksData, setLists, setTasks]);
+  }, [listsData, setLists, setTasks]);
 
   useEffect(() => {
     setClientPhrase(phrases[Math.floor(Math.random() * phrases.length)]);
@@ -95,13 +104,15 @@ export default function App({
 }
 
 export const getServerSideProps = async () => {
-  const listsData: list[] = await prisma.list.findMany();
-  const tasksData: task[] = await prisma.task.findMany();
+  const listsData: list[] = await prisma.list.findMany({
+    include: {
+      tasks: true
+    }
+  });
 
   return {
     props: {
-      listsData: JSON.parse(JSON.stringify(listsData)),
-      tasksData: JSON.parse(JSON.stringify(tasksData))
+      listsData: JSON.parse(JSON.stringify(listsData))
     }
   };
 };

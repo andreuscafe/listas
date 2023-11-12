@@ -4,7 +4,7 @@ import {
   useTaskActions,
   useTasksStore
 } from "@/store";
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, memo, useCallback, useEffect, useState } from "react";
 import { BiChevronDown, BiX } from "react-icons/bi";
 import { Task } from "./Task";
 import { NewItemInput } from "./NewItemInput";
@@ -14,7 +14,9 @@ type ListProps = {
   listData: ListType;
 };
 
-export const List: FC<ListProps> = ({ listData }) => {
+export const List: FC<ListProps> = memo(({ listData }) => {
+  console.log("rendering list", listData.id);
+
   const { updateListTitle, setFoldedList } = useListActions();
   const { getListTasks } = useTaskActions();
 
@@ -143,4 +145,6 @@ export const List: FC<ListProps> = ({ listData }) => {
       </ul>
     </section>
   );
-};
+});
+
+List.displayName = "List";
