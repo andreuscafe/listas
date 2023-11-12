@@ -23,6 +23,6 @@ model task {
   content   String
   createdAt DateTime @default(now())
   completed Boolean  @default(false)
-  list      list     @relation(fields: [listId], references: [id])
+  list      list     @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId    String
 }

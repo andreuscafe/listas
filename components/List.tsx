@@ -46,7 +46,7 @@ export const List: FC<ListProps> = memo(({ listData }) => {
             if (textarea) {
               textarea.focus();
             }
-          } else if (e.type === "removedtask") {
+          } else if (e.type === "removedtask" && tasks.length) {
             console.log(
               "removedtask, intentando pegarle a:",
               tasks.indexOf(e.detail.taskId)
