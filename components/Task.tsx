@@ -42,12 +42,7 @@ export const Task: FC<TaskProps> = memo(({ taskData }) => {
         e.stopPropagation();
         e.preventDefault();
 
-        const newTask = await createTask(taskData.listId);
-
-        dispatchEvent("newtask", {
-          listId: taskData.listId,
-          taskId: newTask.id
-        });
+        await createTask(taskData.listId);
       }
     }
   };
@@ -74,12 +69,7 @@ export const Task: FC<TaskProps> = memo(({ taskData }) => {
 
   const handleDeleteButton = useCallback(async () => {
     if (confirmDelete || !taskData.content) {
-      await deleteTask(taskData.id);
-
-      dispatchEvent("removedtask", {
-        listId: taskData.listId,
-        taskId: taskData.id
-      });
+      await deleteTask(taskData.id, taskData.listId);
     } else {
       setConfirmDelete(true);
     }

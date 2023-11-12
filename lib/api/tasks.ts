@@ -1,6 +1,7 @@
 import { createId } from "@paralleldrive/cuid2";
 import { useTasksStore } from "@/store";
 import { task } from "@prisma/client";
+import { dispatchEvent } from "../utils";
 
 export const getTasks = async () => {
   const res = await fetch("/api/tasks");
@@ -18,7 +19,6 @@ export const createTask = async (listId: string, content?: string) => {
     id: createId(),
     listId,
     content: content || "",
-    title: "Nueva lista",
     createdAt: new Date(),
     completed: false
   } as unknown as task;
@@ -35,7 +35,15 @@ export const createTask = async (listId: string, content?: string) => {
 
   if (res.ok) {
     const newTask = await res.json();
-    return newTask;
+
+    dispatchEvent("newtask", {
+      listId: newTask.listId,
+      taskId: newTask.id
+    });
+
+    return newTask as task;
+  } else {
+    alert("Error al crear la tarea, actualiza la página.");
   }
 };
 
@@ -55,13 +63,13 @@ export const completeTask = async (id: string) => {
   if (res.ok) {
     const updatedTask = await res.json();
     return updatedTask;
+  } else {
+    alert("Error al completar la tarea, actualiza la página.");
   }
 };
 
 export const updateTask = async (id: string, content: string) => {
   const { updateTask } = useTasksStore.getState().taskActions;
-
-  updateTask(id, content);
 
   const res = await fetch("/api/tasks", {
     method: "PUT",
@@ -72,15 +80,17 @@ export const updateTask = async (id: string, content: string) => {
   });
 
   if (res.ok) {
+    updateTask(id, content);
+
     const updatedTask = await res.json();
     return updatedTask;
+  } else {
+    alert("Error al actualizar la tarea, actualiza la página.");
   }
 };
 
-export const deleteTask = async (id: string) => {
+export const deleteTask = async (id: string, listId: string) => {
   const { removeTask } = useTasksStore.getState().taskActions;
-
-  removeTask(id);
 
   const res = await fetch("/api/tasks", {
     method: "DELETE",
@@ -91,7 +101,16 @@ export const deleteTask = async (id: string) => {
   });
 
   if (res.ok) {
+    removeTask(id);
     const deletedTask = await res.json();
+
+    dispatchEvent("removedtask", {
+      taskId: id,
+      listId: listId
+    });
+
     return deletedTask;
+  } else {
+    alert("Error al eliminar la tarea, actualiza la página.");
   }
 };

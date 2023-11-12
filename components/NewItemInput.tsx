@@ -22,10 +22,9 @@ export const NewItemInput: FC<NewItemInputProps> = ({ listId }) => {
 
       const newTask = await createTask(listId, e.currentTarget.value);
 
-      dispatchEvent("newtask", {
-        listId: newTask.listId,
-        taskId: newTask.id
-      });
+      if (!newTask) {
+        return;
+      }
 
       if (textAreaRef.current) {
         textAreaRef.current.value = "";

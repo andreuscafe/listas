@@ -39,8 +39,6 @@ export const createList = async () => {
 export const updateList = async (id: string, title: string) => {
   const { updateListTitle } = useTasksStore.getState().listActions;
 
-  updateListTitle(id, title);
-
   const res = await fetch("/api/lists", {
     method: "PUT",
     body: JSON.stringify({ id, title }),
@@ -50,15 +48,17 @@ export const updateList = async (id: string, title: string) => {
   });
 
   if (res.ok) {
+    updateListTitle(id, title);
+
     const newList = await res.json();
     return newList;
+  } else {
+    alert("Error al actualizar la lista, actualiza la página.");
   }
 };
 
 export const deleteListById = async (id: string) => {
   const { deleteList } = useTasksStore.getState().listActions;
-
-  deleteList(id);
 
   const res = await fetch("/api/lists", {
     method: "DELETE",
@@ -69,7 +69,11 @@ export const deleteListById = async (id: string) => {
   });
 
   if (res.ok) {
+    deleteList(id);
+
     const newList = await res.json();
     return newList;
+  } else {
+    alert("Error al eliminar la lista, actualiza la página.");
   }
 };

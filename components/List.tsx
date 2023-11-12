@@ -49,11 +49,11 @@ export const List: FC<ListProps> = memo(({ listData }) => {
           } else if (e.type === "removedtask" && tasks.length) {
             console.log(
               "removedtask, intentando pegarle a:",
-              tasks.indexOf(e.detail.taskId)
+              tasks.indexOf(tasks[tasks.length - 1])
             );
 
             const textarea = document.querySelector(
-              `textarea[data-taskid="${tasks[tasks.length - 2].id}"]`
+              `textarea[data-taskid="${tasks[tasks.length - 1].id}"]`
             ) as HTMLTextAreaElement;
 
             if (textarea) {

@@ -8,49 +8,53 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<task[] | task | { error: string }>
 ) {
-  if (req.method === "GET") {
-    const response = await prisma.task.findMany();
+  try {
+    if (req.method === "GET") {
+      const response = await prisma.task.findMany();
 
-    res.status(200).json(response);
+      res.status(200).json(response);
+    }
+
+    if (req.method === "POST") {
+      const task = req.body as task;
+
+      const response = await prisma.task.upsert({
+        where: { id: task.id || "" },
+        update: {},
+        create: {
+          id: task.id,
+          listId: task.listId,
+          content: task.content,
+          completed: task.completed
+        }
+      });
+      return res.status(200).json(response);
+    }
+
+    if (req.method === "PUT") {
+      const task = req.body as task;
+
+      const response = await prisma.task.update({
+        where: { id: task.id },
+        data: {
+          content: task.content,
+          completed: task.completed
+        }
+      });
+      return res.status(200).json(response);
+    }
+
+    if (req.method === "DELETE") {
+      const { id } = req.body as { id: string };
+
+      const response = await prisma.task.delete({
+        where: { id }
+      });
+      return res.status(200).json(response);
+    }
+
+    res.status(400).json({ error: "Method not allowed" });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
   }
-
-  if (req.method === "POST") {
-    const task = req.body as task;
-
-    const response = await prisma.task.upsert({
-      where: { id: task.id || "" },
-      update: {},
-      create: {
-        id: task.id,
-        listId: task.listId,
-        content: task.content,
-        completed: task.completed
-      }
-    });
-    return res.status(200).json(response);
-  }
-
-  if (req.method === "PUT") {
-    const task = req.body as task;
-
-    const response = await prisma.task.update({
-      where: { id: task.id },
-      data: {
-        content: task.content,
-        completed: task.completed
-      }
-    });
-    return res.status(200).json(response);
-  }
-
-  if (req.method === "DELETE") {
-    const { id } = req.body as { id: string };
-
-    const response = await prisma.task.delete({
-      where: { id }
-    });
-    return res.status(200).json(response);
-  }
-
-  res.status(400).json({ error: "Method not allowed" });
 }
