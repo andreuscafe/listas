@@ -37,8 +37,6 @@ export default function App({ listsData }: AppProps) {
   const { setTasks } = useTaskActions();
   const [clientPhrase, setClientPhrase] = useState(phrases[0]);
 
-  console.log("listsData", listsData[1].tasks);
-
   useEffect(() => {
     setLists(
       listsData
