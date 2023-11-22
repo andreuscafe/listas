@@ -16,12 +16,9 @@ type TaskProps = {
 };
 
 export const Task: FC<TaskProps> = memo(({ taskData }) => {
-  console.log("rendering task", taskData.id);
-
-  const { removeTask, getTaskById } = useTaskActions();
-
   const timer = useRef<NodeJS.Timeout>();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const { getTaskById } = useTaskActions();
 
   const [completed, setCompleted] = useState(taskData.completed);
 
@@ -50,30 +47,31 @@ export const Task: FC<TaskProps> = memo(({ taskData }) => {
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.currentTarget.value;
 
-    if (!e.currentTarget.value) {
-      return;
-    }
-
     if (timer.current) clearTimeout(timer.current);
 
     timer.current = setTimeout(async () => {
-      console.log("updating task", newValue);
-      await updateTask(taskData.id, newValue);
+      if (newValue === taskData.content || !getTaskById(taskData.id)) {
+        return;
+      }
+
+      await updateTask(taskData.id, newValue).then(() => {
+        taskData.content = newValue;
+      });
     }, 500);
   };
 
   const handleComplete = async (id: task["id"]) => {
+    setCompleted(!completed);
     await completeTask(id);
-    setCompleted(getTaskById(id).completed);
   };
 
   const handleDeleteButton = useCallback(async () => {
-    if (confirmDelete || !taskData.content) {
+    if (confirmDelete || !textareaRef.current?.value) {
       await deleteTask(taskData.id, taskData.listId);
     } else {
       setConfirmDelete(true);
     }
-  }, [confirmDelete, taskData.id, taskData.listId, taskData.content]);
+  }, [confirmDelete, taskData.id, taskData.listId]);
 
   return (
     <div

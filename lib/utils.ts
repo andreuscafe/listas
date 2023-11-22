@@ -12,7 +12,9 @@ export const dispatchEvent = (
   detail: any
 ) => {
   setTimeout(() => {
-    console.info("dispatching event", eventName, detail);
+    if (process.env.NODE_ENV === "development") {
+      console.info("dispatching event", eventName, detail);
+    }
     window.dispatchEvent(new CustomEvent(eventName, { detail }));
   }, 0);
 };

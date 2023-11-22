@@ -8,6 +8,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<list[] | list | { error: string }>
 ) {
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
   if (req.method === "GET") {
     const response = await prisma.list.findMany();
 

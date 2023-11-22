@@ -59,6 +59,7 @@ export const updateList = async (id: string, title: string) => {
 
 export const deleteListById = async (id: string) => {
   const { deleteList } = useTasksStore.getState().listActions;
+  deleteList(id);
 
   const res = await fetch("/api/lists", {
     method: "DELETE",
@@ -69,8 +70,6 @@ export const deleteListById = async (id: string) => {
   });
 
   if (res.ok) {
-    deleteList(id);
-
     const newList = await res.json();
     return newList;
   } else {

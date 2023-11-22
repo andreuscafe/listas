@@ -10,8 +10,6 @@ type ListProps = {
 };
 
 export const List: FC<ListProps> = memo(({ listData }) => {
-  console.log("rendering list", listData.id);
-
   const [listTitle, setListTitle] = useState(listData.title);
 
   const { setFoldedList } = useListActions();
@@ -47,11 +45,6 @@ export const List: FC<ListProps> = memo(({ listData }) => {
               textarea.focus();
             }
           } else if (e.type === "removedtask" && tasks.length) {
-            console.log(
-              "removedtask, intentando pegarle a:",
-              tasks.indexOf(tasks[tasks.length - 1])
-            );
-
             const textarea = document.querySelector(
               `textarea[data-taskid="${tasks[tasks.length - 1].id}"]`
             ) as HTMLTextAreaElement;
@@ -77,8 +70,13 @@ export const List: FC<ListProps> = memo(({ listData }) => {
     if (timer.current) clearTimeout(timer.current);
 
     timer.current = setTimeout(async () => {
-      console.log("updating title", newValue);
-      await updateList(listData.id, newValue);
+      if (newValue === listData.title) {
+        return;
+      }
+
+      await updateList(listData.id, newValue).then(() => {
+        listData.title = newValue;
+      });
     }, 500);
   };
 

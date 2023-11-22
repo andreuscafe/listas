@@ -25,6 +25,11 @@ export const createTask = async (listId: string, content?: string) => {
 
   addTask(listId, newTask);
 
+  dispatchEvent("newtask", {
+    listId: newTask.listId,
+    taskId: newTask.id
+  });
+
   const res = await fetch("/api/tasks", {
     method: "POST",
     body: JSON.stringify(newTask),
@@ -35,11 +40,6 @@ export const createTask = async (listId: string, content?: string) => {
 
   if (res.ok) {
     const newTask = await res.json();
-
-    dispatchEvent("newtask", {
-      listId: newTask.listId,
-      taskId: newTask.id
-    });
 
     return newTask as task;
   } else {
@@ -92,6 +92,13 @@ export const updateTask = async (id: string, content: string) => {
 export const deleteTask = async (id: string, listId: string) => {
   const { removeTask } = useTasksStore.getState().taskActions;
 
+  removeTask(id);
+
+  dispatchEvent("removedtask", {
+    taskId: id,
+    listId: listId
+  });
+
   const res = await fetch("/api/tasks", {
     method: "DELETE",
     body: JSON.stringify({ id }),
@@ -101,13 +108,7 @@ export const deleteTask = async (id: string, listId: string) => {
   });
 
   if (res.ok) {
-    removeTask(id);
     const deletedTask = await res.json();
-
-    dispatchEvent("removedtask", {
-      taskId: id,
-      listId: listId
-    });
 
     return deletedTask;
   } else {
