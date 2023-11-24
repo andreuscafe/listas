@@ -44,7 +44,7 @@ export default function App({ listsData }: AppProps) {
           id: l.id,
           title: l.title,
           createdAt: new Date(l.createdAt),
-          folded: false
+          folded: l.folded
         }))
         .sort(
           (a, b) => a.createdAt.getTime() - b.createdAt.getTime()

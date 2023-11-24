@@ -3,7 +3,7 @@ import { FC, memo, useCallback, useEffect, useRef, useState } from "react";
 import { BiChevronDown, BiX } from "react-icons/bi";
 import { Task } from "./Task";
 import { NewItemInput } from "./NewItemInput";
-import { deleteListById, updateList } from "@/lib/api/lists";
+import { deleteListById, foldList, updateList } from "@/lib/api/lists";
 
 type ListProps = {
   listData: ListType;
@@ -12,7 +12,6 @@ type ListProps = {
 export const List: FC<ListProps> = memo(({ listData }) => {
   const [listTitle, setListTitle] = useState(listData.title);
 
-  const { setFoldedList } = useListActions();
   const { getListTasks } = useTaskActions();
 
   const [tasks, setTasks] = useState(getListTasks(listData.id));
@@ -80,6 +79,16 @@ export const List: FC<ListProps> = memo(({ listData }) => {
     }, 500);
   };
 
+  const handleFoldList = useCallback(async () => {
+    foldList(listData.id, !listData.folded)
+      .then(() => {
+        listData.folded = !listData.folded;
+      })
+      .catch(() => {
+        console.error("Error folding list");
+      });
+  }, [listData]);
+
   useEffect(() => {
     if (window) {
       window.removeEventListener("newtask", refreshTasks as EventListener);
@@ -131,7 +140,7 @@ export const List: FC<ListProps> = memo(({ listData }) => {
         </button>
         <button
           className="p-2 bg-[#0A0A0A] rounded-lg transition-colors duration-300 group"
-          onClick={() => setFoldedList(listData.id, !listData.folded)}
+          onClick={handleFoldList}
         >
           <BiChevronDown
             size={24}

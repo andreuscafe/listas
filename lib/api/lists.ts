@@ -16,8 +16,9 @@ export const createList = async () => {
 
   const newList = {
     id: createId(),
-    title: "Nueva lista",
-    createdAt: new Date()
+    title: "Nueva lista tu vieja",
+    createdAt: new Date(),
+    folded: false
   } as list;
 
   addList(newList);
@@ -50,6 +51,26 @@ export const updateList = async (id: string, title: string) => {
   if (res.ok) {
     updateListTitle(id, title);
 
+    const newList = await res.json();
+    return newList;
+  } else {
+    alert("Error al actualizar la lista, actualiza la página.");
+  }
+};
+
+export const foldList = async (id: string, folded: boolean) => {
+  const { setFoldedList } = useTasksStore.getState().listActions;
+  setFoldedList(id, folded);
+
+  const res = await fetch("/api/lists", {
+    method: "PUT",
+    body: JSON.stringify({ id, folded }),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
+
+  if (res.ok) {
     const newList = await res.json();
     return newList;
   } else {

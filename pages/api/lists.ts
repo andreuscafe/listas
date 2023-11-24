@@ -34,7 +34,8 @@ export default async function handler(
     const response = await prisma.list.update({
       where: { id: list.id },
       data: {
-        title: list.title
+        title: list.title !== undefined ? list.title : undefined,
+        folded: list.folded !== undefined ? list.folded : undefined
       }
     });
     return res.status(200).json(response);

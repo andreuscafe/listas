@@ -1,6 +1,5 @@
 import { createId } from "@paralleldrive/cuid2";
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
 export type TaskType = {
   id: string;

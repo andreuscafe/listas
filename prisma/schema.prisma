@@ -15,6 +15,7 @@ model list {
   id        String   @id @default(cuid())
   title     String
   createdAt DateTime @default(now())
+  folded    Boolean  @default(false)
   tasks     task[]
 }
 
