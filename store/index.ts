@@ -1,69 +1,56 @@
 import { createId } from "@paralleldrive/cuid2";
+import { list, task } from "@prisma/client";
 import { create } from "zustand";
 
-export type TaskType = {
-  id: string;
-  content: string;
-  completed: boolean;
-  listId: ListType["id"];
-  createdAt?: Date;
-};
-
-export type ListType = {
-  id: string;
-  title: string;
-  folded?: boolean;
-  createdAt?: Date;
-};
-
 export type TasksStore = {
-  lists: ListType[];
+  lists: list[];
   listActions: {
-    setLists: (lists: ListType[]) => void;
-    addList: (list?: ListType) => void;
-    updateListTitle: (id: ListType["id"], title: ListType["title"]) => void;
-    deleteList: (id: ListType["id"]) => void;
-    setFoldedList: (id: ListType["id"], folded: ListType["folded"]) => void;
+    setLists: (lists: list[]) => void;
+    addList: (list?: list) => void;
+    updateListTitle: (id: list["id"], title: list["title"]) => void;
+    deleteList: (id: list["id"]) => void;
+    setFoldedList: (id: list["id"], folded: list["folded"]) => void;
+    getListById: (id: list["id"]) => list;
   };
 
-  tasks: TaskType[];
+  tasks: task[];
   taskActions: {
-    setTasks: (tasks: TaskType[]) => void;
-    addTask: (listId: ListType["id"], task?: TaskType) => TaskType;
-    removeTask: (id: TaskType["id"]) => void;
-    toggleCompleted: (id: TaskType["id"]) => void;
-    updateTask: (id: TaskType["id"], content: TaskType["content"]) => void;
-    getListTasks: (listId: ListType["id"]) => TaskType[];
-    getTaskById: (id: TaskType["id"]) => TaskType;
+    setTasks: (tasks: task[]) => void;
+    addTask: (listId: list["id"], task?: task) => task;
+    removeTask: (id: task["id"]) => void;
+    toggleCompleted: (id: task["id"]) => void;
+    updateTask: (id: task["id"], content: task["content"]) => void;
+    getListTasks: (listId: list["id"]) => task[];
+    getTaskById: (id: task["id"]) => task;
   };
 };
 
-const generateEmptyTask = (listId: ListType["id"]) => {
+const generateEmptyTask = (listId: list["id"]) => {
   return {
     id: createId(),
     content: ``,
     completed: false,
     listId
-  } as TaskType;
+  } as task;
 };
 
 export const useTasksStore = create<TasksStore>((set, get) => ({
   lists: [],
   listActions: {
     setLists: (lists) => set({ lists }),
-    addList: (list) => {
+    addList: (list) =>
       set((state) => ({
         lists: [
           ...state.lists,
           list || {
-            id: Math.random().toString(36).substr(2, 9),
-            title: `Nueva lista`,
+            id: createId(),
+            title: "",
+            createdAt: new Date(),
             folded: false
           }
         ]
-      }));
-    },
-    updateListTitle: (id: ListType["id"], title: ListType["title"]) =>
+      })),
+    updateListTitle: (id: list["id"], title: list["title"]) =>
       set((state) => ({
         lists: state.lists.map((list) => {
           if (list.id === id) {
@@ -75,11 +62,11 @@ export const useTasksStore = create<TasksStore>((set, get) => ({
           return list;
         })
       })),
-    deleteList: (id: ListType["id"]) =>
+    deleteList: (id: list["id"]) =>
       set((state) => ({
         lists: state.lists.filter((list) => list.id !== id)
       })),
-    setFoldedList: (id: ListType["id"], folded: ListType["folded"]) =>
+    setFoldedList: (id: list["id"], folded: list["folded"]) =>
       set((state) => ({
         lists: state.lists.map((list) => {
           if (list.id === id) {
@@ -90,7 +77,11 @@ export const useTasksStore = create<TasksStore>((set, get) => ({
           }
           return list;
         })
-      }))
+      })),
+    getListById: (id: list["id"]) => {
+      const lists = get().lists;
+      return lists.find((list) => list.id === id) as list;
+    }
   },
 
   tasks: [],
@@ -145,15 +136,24 @@ export const useTasksStore = create<TasksStore>((set, get) => ({
     },
     getTaskById: (id) => {
       const tasks = get().tasks;
-      return tasks.find((task) => task.id === id) as TaskType;
+      return tasks.find((task) => task.id === id) as task;
     }
   }
 }));
 
-export const useLists = () => useTasksStore((state) => state.lists);
+export const useLists = (listId?: list["id"]) =>
+  useTasksStore((state) =>
+    listId
+      ? (state.lists.find((list) => list.id === listId) as list)
+      : state.lists
+  );
+export const useList = (listId: list["id"]) =>
+  useTasksStore(
+    (state) => state.lists.find((list) => list.id === listId) as list
+  );
 export const useListActions = () => useTasksStore((state) => state.listActions);
 
-export const useTasks = (listId: ListType["id"]) =>
+export const useTasks = (listId: list["id"]) =>
   useTasksStore((state) => ({
     tasks: state.tasks.filter((task) => task.listId === listId)
   }));

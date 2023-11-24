@@ -1,12 +1,5 @@
 import { List } from "@/components/List";
-import {
-  ListType,
-  TaskType,
-  useListActions,
-  useLists,
-  useTaskActions,
-  useTasksStore
-} from "@/store";
+import { useListActions, useLists, useTaskActions } from "@/store";
 import { list, task } from "@prisma/client";
 import Head from "next/head";
 import { useCallback, useEffect, useState } from "react";
@@ -46,9 +39,7 @@ export default function App({ listsData }: AppProps) {
           createdAt: new Date(l.createdAt),
           folded: l.folded
         }))
-        .sort(
-          (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
-        ) as ListType[]
+        .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()) as list[]
     );
 
     setTasks(

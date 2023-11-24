@@ -1,15 +1,20 @@
-import { ListType, useListActions, useTaskActions } from "@/store";
+import { useTaskActions } from "@/store";
 import { FC, memo, useCallback, useEffect, useRef, useState } from "react";
-import { BiChevronDown, BiX } from "react-icons/bi";
+import { BiChevronDown, BiRightTopArrowCircle, BiX } from "react-icons/bi";
 import { Task } from "./Task";
 import { NewItemInput } from "./NewItemInput";
 import { deleteListById, foldList, updateList } from "@/lib/api/lists";
+import { useRouter } from "next/router";
+import { list } from "@prisma/client";
 
 type ListProps = {
-  listData: ListType;
+  listData: list;
+  standalone?: boolean;
 };
 
-export const List: FC<ListProps> = memo(({ listData }) => {
+export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
+  const router = useRouter();
+
   const [listTitle, setListTitle] = useState(listData.title);
 
   const { getListTasks } = useTaskActions();
@@ -20,13 +25,14 @@ export const List: FC<ListProps> = memo(({ listData }) => {
 
   const timer = useRef<NodeJS.Timeout>();
 
-  const handleDeleteList = useCallback(() => {
+  const handleDeleteList = useCallback(async () => {
     if (confirmDelete) {
-      deleteListById(listData.id);
+      await deleteListById(listData.id);
+      if (standalone) router.push("/app");
     } else {
       setConfirmDelete(true);
     }
-  }, [confirmDelete, listData.id]);
+  }, [confirmDelete, listData.id, router, standalone]);
 
   const refreshTasks = useCallback(
     (e: CustomEvent) => {
@@ -124,6 +130,20 @@ export const List: FC<ListProps> = memo(({ listData }) => {
       </div>
 
       <div className="absolute top-0 right-4 -translate-y-1/2 flex">
+        {!standalone && (
+          <button
+            className={`p-2 bg-[#0A0A0A] rounded-lg transition-colors duration-300 group`}
+            onClick={() => {
+              router.push(`/app/list/${listData.id}`);
+            }}
+          >
+            <BiRightTopArrowCircle
+              size={24}
+              className="opacity-40 group-hover:opacity-100 transition-opacity"
+            />
+          </button>
+        )}
+
         <button
           className={`p-2 bg-[#0A0A0A] rounded-lg transition-colors duration-300 group ${
             confirmDelete ? "bg-red-900" : ""
@@ -138,23 +158,30 @@ export const List: FC<ListProps> = memo(({ listData }) => {
             className="opacity-40 group-hover:opacity-100 transition-opacity"
           />
         </button>
-        <button
-          className="p-2 bg-[#0A0A0A] rounded-lg transition-colors duration-300 group"
-          onClick={handleFoldList}
-        >
-          <BiChevronDown
-            size={24}
-            className={`opacity-40 group-hover:opacity-100 transition-all duration-300 ${
-              !listData.folded ? "rotate-180" : ""
-            }`}
-          />
-        </button>
+
+        {!standalone && (
+          <button
+            className="p-2 bg-[#0A0A0A] rounded-lg transition-colors duration-300 group"
+            onClick={handleFoldList}
+          >
+            <BiChevronDown
+              size={24}
+              className={`opacity-40 group-hover:opacity-100 transition-all duration-300 ${
+                !listData.folded ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+        )}
       </div>
 
       {/* Tasks list */}
       <ul
         className={`flex flex-col justify-start gap-2 transition-all duration-300 overflow-auto ${
-          listData.folded ? "max-h-0 overflow-hidden" : "max-h-[500px]"
+          listData.folded && !standalone
+            ? "max-h-0 overflow-hidden"
+            : standalone
+            ? "max-h-max"
+            : "max-h-[500px]"
         }`}
       >
         {tasks.map((task) => (

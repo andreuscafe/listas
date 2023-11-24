@@ -16,7 +16,7 @@ export const createList = async () => {
 
   const newList = {
     id: createId(),
-    title: "Nueva lista tu vieja",
+    title: "Nueva lista",
     createdAt: new Date(),
     folded: false
   } as list;
