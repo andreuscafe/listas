@@ -1,10 +1,9 @@
 import { List } from "@/components/List";
 import prisma from "@/lib/prisma";
-import { useList, useListActions, useLists, useTaskActions } from "@/store";
+import { useList, useListActions, useTaskActions } from "@/store";
 import { list, task } from "@prisma/client";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { BiArrowBack } from "react-icons/bi";
 

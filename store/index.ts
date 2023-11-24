@@ -141,12 +141,7 @@ export const useTasksStore = create<TasksStore>((set, get) => ({
   }
 }));
 
-export const useLists = (listId?: list["id"]) =>
-  useTasksStore((state) =>
-    listId
-      ? (state.lists.find((list) => list.id === listId) as list)
-      : state.lists
-  );
+export const useLists = () => useTasksStore((state) => state.lists);
 export const useList = (listId: list["id"]) =>
   useTasksStore(
     (state) => state.lists.find((list) => list.id === listId) as list

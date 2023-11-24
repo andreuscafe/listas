@@ -4,15 +4,14 @@ import {
   deleteTask,
   updateTask
 } from "@/lib/api/tasks";
-import { dispatchEvent } from "@/lib/utils";
-import { TaskType, useTaskActions, useTasksStore } from "@/store";
+import { useTaskActions } from "@/store";
 import { task } from "@prisma/client";
 import { FC, memo, useCallback, useRef, useState } from "react";
 import { BiCheck, BiX } from "react-icons/bi";
 import ReactTextareaAutosize from "react-textarea-autosize";
 
 type TaskProps = {
-  taskData: TaskType;
+  taskData: task;
 };
 
 export const Task: FC<TaskProps> = memo(({ taskData }) => {

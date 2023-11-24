@@ -1,12 +1,10 @@
-import { ListType, useTaskActions, useTasksStore } from "@/store";
-import { dispatchEvent } from "@/lib/utils";
 import { FC, useRef } from "react";
 import TextareaAutosize from "react-textarea-autosize";
-import { createId } from "@paralleldrive/cuid2";
 import { createTask } from "@/lib/api/tasks";
+import { list } from "@prisma/client";
 
 type NewItemInputProps = {
-  listId: ListType["id"];
+  listId: list["id"];
 };
 
 export const NewItemInput: FC<NewItemInputProps> = ({ listId }) => {
