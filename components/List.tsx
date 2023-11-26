@@ -116,80 +116,94 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
   }, [refreshTasks]);
 
   return (
-    <section className="mb-10 rounded-2xl backdrop-blur-xl border-[2px] border-neutral-700 relative">
-      <div className="block absolute top-0 left-4 -translate-y-1/2 bg-[#0A0A0A]">
-        <span className="p-4 whitespace-pre opacity-0">{listTitle}</span>
-        <input
-          onChange={handleTitleChange}
-          className="p-0 text-center bg-transparent absolute top-0 left-0 w-full h-full outline-none"
-          defaultValue={listData.title}
-          autoComplete="off"
-          spellCheck="false"
-          id={`list-title-${listData.id}`}
-        />
-      </div>
+    <section className="relative">
+      {/* Header */}
+      <nav className="absolute z-10 top-0 -translate-y-1/2 w-full flex justify-between px-4">
+        <div className="block relative bg-[#0A0A0A]">
+          <h4 className="text-base inline p-4 whitespace-pre opacity-0">
+            {listTitle}
+          </h4>
+          <input
+            onChange={handleTitleChange}
+            className="p-0 text-center bg-transparent absolute top-0 left-0 w-full h-full outline-none"
+            defaultValue={listData.title}
+            autoComplete="off"
+            spellCheck="false"
+            id={`list-title-${listData.id}`}
+          />
+        </div>
 
-      <div className="absolute top-0 right-4 -translate-y-1/2 flex">
-        {!standalone && (
+        <div className="flex">
+          {!standalone && (
+            <button
+              className={`p-2 bg-[#0A0A0A] rounded-lg transition-colors duration-300 group`}
+              onClick={() => {
+                router.push(`/app/list/${listData.id}`);
+              }}
+            >
+              <BiRightTopArrowCircle
+                size={24}
+                className="opacity-40 group-hover:opacity-100 transition-opacity"
+              />
+            </button>
+          )}
+
           <button
-            className={`p-2 bg-[#0A0A0A] rounded-lg transition-colors duration-300 group`}
-            onClick={() => {
-              router.push(`/app/list/${listData.id}`);
+            className={`p-2 bg-[#0A0A0A] rounded-lg transition-colors duration-300 group ${
+              confirmDelete ? "bg-red-900" : ""
+            }`}
+            onClick={handleDeleteList}
+            onBlur={() => {
+              setConfirmDelete(false);
             }}
           >
-            <BiRightTopArrowCircle
+            <BiX
               size={24}
               className="opacity-40 group-hover:opacity-100 transition-opacity"
             />
           </button>
-        )}
 
-        <button
-          className={`p-2 bg-[#0A0A0A] rounded-lg transition-colors duration-300 group ${
-            confirmDelete ? "bg-red-900" : ""
-          }`}
-          onClick={handleDeleteList}
-          onBlur={() => {
-            setConfirmDelete(false);
-          }}
-        >
-          <BiX
-            size={24}
-            className="opacity-40 group-hover:opacity-100 transition-opacity"
-          />
-        </button>
+          {!standalone && (
+            <button
+              className="p-2 bg-[#0A0A0A] rounded-lg transition-colors duration-300 group"
+              onClick={handleFoldList}
+            >
+              <BiChevronDown
+                size={24}
+                className={`opacity-40 group-hover:opacity-100 transition-all duration-300 ${
+                  !listData.folded ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+          )}
+        </div>
+      </nav>
 
-        {!standalone && (
-          <button
-            className="p-2 bg-[#0A0A0A] rounded-lg transition-colors duration-300 group"
-            onClick={handleFoldList}
-          >
-            <BiChevronDown
-              size={24}
-              className={`opacity-40 group-hover:opacity-100 transition-all duration-300 ${
-                !listData.folded ? "rotate-180" : ""
-              }`}
-            />
-          </button>
-        )}
-      </div>
-
-      {/* Tasks list */}
-      <ul
-        className={`p-6 flex flex-col justify-start gap-2 transition-all duration-300 overflow-auto ${
-          listData.folded && !standalone
-            ? "max-h-0 py-0 overflow-hidden"
-            : standalone
-            ? "max-h-max"
-            : "max-h-[500px]"
+      {/* Wrapper */}
+      <div
+        className={`mb-10 rounded-2xl backdrop-blur-xl border-[2px] border-neutral-700 relative overflow-hidden ${
+          tasks.length
+            ? "after:absolute after:top-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-b after:from-[#0A0A0A] after:via-60% after:via-[#0A0A0A] after:to-transparent after:z-10"
+            : ""
         }`}
       >
-        {tasks.map((task) => (
-          <Task key={task.id} taskData={task} />
-        ))}
+        {/* Tasks list */}
+        <ul
+          className={`px-6 py-6 flex flex-col justify-start gap-2 transition-all duration-300 overflow-y-auto overflow-x-hidden relative ${
+            listData.folded && !standalone
+              ? "max-h-0 pb-0 overflow-hidden"
+              : standalone
+              ? "max-h-max"
+              : "max-h-[500px]"
+          }`}
+        >
+          {tasks.map((task) => (
+            <Task key={task.id} taskData={task} />
+          ))}
 
-        {!tasks.length && <NewItemInput listId={listData.id} />}
-      </ul>
+          {!tasks.length && <NewItemInput listId={listData.id} />}
+        </ul>
+      </div>
     </section>
   );
 });
