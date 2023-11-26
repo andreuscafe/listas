@@ -10,6 +10,8 @@ import { task } from "@prisma/client";
 import { FC, memo, useCallback, useRef, useState } from "react";
 import { BiCheck, BiX } from "react-icons/bi";
 import ReactTextareaAutosize from "react-textarea-autosize";
+import { motion } from "framer-motion";
+import { SpringTransition } from "@/lib/animations";
 
 type TaskProps = {
   taskData: task;
@@ -71,12 +73,15 @@ export const Task: FC<TaskProps> = memo(({ taskData }) => {
   };
 
   const handleDeleteButton = useCallback(async () => {
-    if (confirmDelete || !textareaRef.current?.value) {
+    if (
+      (confirmDelete || !textareaRef.current?.value) &&
+      !!getTaskById(taskData.id)
+    ) {
       await deleteTask(taskData.id, taskData.listId);
     } else {
       setConfirmDelete(true);
     }
-  }, [confirmDelete, taskData.id, taskData.listId]);
+  }, [confirmDelete, taskData.id, taskData.listId, getTaskById]);
 
   const handlePriorityChange = useCallback(() => {
     const newPriority = priority === 3 ? 0 : priority + 1;
@@ -89,13 +94,17 @@ export const Task: FC<TaskProps> = memo(({ taskData }) => {
       if (!getTaskById(taskData.id)) {
         return;
       }
-      console.log("priority changed for task", newPriority);
       await updateTaskPriority(taskData.id, taskData.priority);
     }, 500);
   }, [priority, taskData, getTaskById]);
 
   return (
-    <div
+    <motion.div
+      layout
+      initial={{ opacity: 0, x: -10 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -10 }}
+      transition={SpringTransition}
       className={`group/item focus-within:bg-[#111] p-2 rounded-lg transition-colors duration-200 ${
         priority === 3
           ? "order-1"
@@ -197,7 +206,7 @@ export const Task: FC<TaskProps> = memo(({ taskData }) => {
           />
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 });
 

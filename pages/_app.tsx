@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import { AnimatePresence } from "framer-motion";
 import type { AppProps } from "next/app";
 
 import { Inter } from "next/font/google";
@@ -85,7 +86,10 @@ export default function App({ Component, pageProps }: AppProps) {
         }
       `}</style>
       {/* <Header /> */}
-      <Component {...pageProps} />
+
+      <AnimatePresence mode="wait">
+        <Component {...pageProps} />
+      </AnimatePresence>
     </>
   );
 }

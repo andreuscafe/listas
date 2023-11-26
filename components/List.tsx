@@ -6,6 +6,8 @@ import { NewItemInput } from "./NewItemInput";
 import { deleteListById, foldList, updateList } from "@/lib/api/lists";
 import { useRouter } from "next/router";
 import { list } from "@prisma/client";
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import { SpringTransition } from "@/lib/animations";
 
 type ListProps = {
   listData: list;
@@ -116,7 +118,30 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
   }, [refreshTasks]);
 
   return (
-    <section className="relative">
+    <motion.section
+      initial={{
+        opacity: 0,
+        scale: 0.9
+      }}
+      animate={{
+        opacity: 1,
+        scale: 1
+      }}
+      exit={{
+        opacity: 0,
+        scale: 0.9,
+        transition: {
+          duration: 0.3
+        }
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 300,
+        damping: 30
+      }}
+      layout="position"
+      className="relative"
+    >
       {/* Header */}
       <nav className="absolute z-10 top-0 -translate-y-1/2 w-full flex justify-between px-4">
         <div className="block relative bg-[#0A0A0A]">
@@ -188,23 +213,32 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
         }`}
       >
         {/* Tasks list */}
-        <ul
-          className={`px-6 py-6 flex flex-col justify-start gap-2 transition-all duration-300 overflow-y-auto overflow-x-hidden relative ${
-            listData.folded && !standalone
-              ? "max-h-0 pb-0 overflow-hidden"
-              : standalone
-              ? "max-h-max"
-              : "max-h-[500px]"
-          }`}
-        >
-          {tasks.map((task) => (
-            <Task key={task.id} taskData={task} />
-          ))}
+        <LayoutGroup>
+          <motion.ul
+            initial={{
+              height: listData.folded && !standalone ? 0 : "auto",
+              paddingBottom: listData.folded && !standalone ? 0 : "1.5rem",
+              paddingTop: listData.folded && !standalone ? 0 : "1.5rem"
+            }}
+            animate={{
+              height: listData.folded && !standalone ? 0 : "auto",
+              paddingBottom: listData.folded && !standalone ? 0 : "1.5rem",
+              paddingTop: listData.folded && !standalone ? 0 : "1.5rem"
+            }}
+            transition={SpringTransition}
+            className={`px-6 box-content flex flex-col justify-start gap-2 overflow-hidden relative`}
+          >
+            <AnimatePresence mode="sync">
+              {tasks.map((task) => (
+                <Task key={task.id} taskData={task} />
+              ))}
+            </AnimatePresence>
 
-          {!tasks.length && <NewItemInput listId={listData.id} />}
-        </ul>
+            {!tasks.length && <NewItemInput listId={listData.id} />}
+          </motion.ul>
+        </LayoutGroup>
       </div>
-    </section>
+    </motion.section>
   );
 });
 

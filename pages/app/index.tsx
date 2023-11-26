@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import prisma from "@/lib/prisma";
 import { createList } from "@/lib/api/lists";
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 
 const phrases = [
   "La vida es una colección de momentos, asegúrate de vivir cada uno.",
@@ -76,16 +77,25 @@ export default function App({ listsData }: AppProps) {
           <p className="text-neutral-600">{clientPhrase}</p>
         </section>
 
-        {lists?.map((list) => (
-          <List key={list.id} listData={list} />
-        ))}
+        <LayoutGroup>
+          <AnimatePresence mode="sync">
+            {lists?.map((list) => (
+              <List key={list.id} listData={list} />
+            ))}
+          </AnimatePresence>
 
-        <button
-          className="w-full py-6 opacity-40 hover:opacity-100 transition-opacity rounded-2xl border-[2px] border-white border-opacity-20"
-          onClick={handleCreateList}
-        >
-          Agregar lista
-        </button>
+          <motion.button
+            layout
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-full py-6 opacity-40 hover:opacity-100 transition-opacity rounded-2xl border-[2px] border-white border-opacity-20"
+            onClick={handleCreateList}
+          >
+            Agregar lista
+          </motion.button>
+        </LayoutGroup>
       </main>
     </>
   );
