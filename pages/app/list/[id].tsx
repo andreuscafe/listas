@@ -31,11 +31,8 @@ export default function ListPage({ listData }: ListPageProps) {
       setTasks(
         listData.tasks
           .map((t) => ({
-            id: t.id,
-            content: t.content,
-            completed: t.completed,
-            createdAt: new Date(t.createdAt), // convert to Date object
-            listId: t.listId
+            ...t,
+            createdAt: new Date(t.createdAt) // convert to Date object
           }))
           .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()) // use getTime() to compare dates
       );
@@ -56,9 +53,7 @@ export default function ListPage({ listData }: ListPageProps) {
       {list ? (
         <List listData={list} standalone />
       ) : (
-        <div>
-          No se encontró la lista. <Link href={"/app"}>Volver atras</Link>
-        </div>
+        <div>No se encontró esta lista.</div>
       )}
     </main>
   );

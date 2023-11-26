@@ -20,7 +20,8 @@ export const createTask = async (listId: string, content?: string) => {
     listId,
     content: content || "",
     createdAt: new Date(),
-    completed: false
+    completed: false,
+    priority: 0
   } as unknown as task;
 
   addTask(listId, newTask);
@@ -113,5 +114,26 @@ export const deleteTask = async (id: string, listId: string) => {
     return deletedTask;
   } else {
     alert("Error al eliminar la tarea, actualiza la página.");
+  }
+};
+
+export const updateTaskPriority = async (id: string, priority: number) => {
+  const { setPriority } = useTasksStore.getState().taskActions;
+
+  const res = await fetch("/api/tasks", {
+    method: "PUT",
+    body: JSON.stringify({ id, priority }),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
+
+  if (res.ok) {
+    setPriority(id, priority);
+
+    const updatedTask = await res.json();
+    return updatedTask;
+  } else {
+    alert("Error al actualizar la tarea, actualiza la página.");
   }
 };

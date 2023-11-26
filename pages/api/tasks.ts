@@ -37,8 +37,7 @@ export default async function handler(
       const response = await prisma.task.update({
         where: { id: task.id },
         data: {
-          content: task.content,
-          completed: task.completed
+          ...task
         }
       });
       return res.status(200).json(response);

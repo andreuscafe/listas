@@ -26,4 +26,5 @@ model task {
   completed Boolean  @default(false)
   list      list     @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId    String
+  priority  Int      @default(0)
 }

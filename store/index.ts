@@ -20,6 +20,7 @@ export type TasksStore = {
     removeTask: (id: task["id"]) => void;
     toggleCompleted: (id: task["id"]) => void;
     updateTask: (id: task["id"], content: task["content"]) => void;
+    setPriority: (id: task["id"], priority: task["priority"]) => void;
     getListTasks: (listId: list["id"]) => task[];
     getTaskById: (id: task["id"]) => task;
   };
@@ -125,6 +126,18 @@ export const useTasksStore = create<TasksStore>((set, get) => ({
             return {
               ...task,
               content
+            };
+          }
+          return task;
+        })
+      })),
+    setPriority: (id, priority) =>
+      set((state) => ({
+        tasks: state.tasks.map((task) => {
+          if (task.id === id) {
+            return {
+              ...task,
+              priority
             };
           }
           return task;

@@ -48,11 +48,8 @@ export default function App({ listsData }: AppProps) {
           (l) =>
             l.tasks
               .map((t) => ({
-                id: t.id,
-                content: t.content,
-                completed: t.completed,
-                createdAt: new Date(t.createdAt), // convert to Date object
-                listId: t.listId
+                ...t,
+                createdAt: new Date(t.createdAt) // convert to Date object
               }))
               .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()) // use getTime() to compare dates
         )

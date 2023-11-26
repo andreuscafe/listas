@@ -116,7 +116,7 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
   }, [refreshTasks]);
 
   return (
-    <section className="p-6 mb-10 rounded-2xl backdrop-blur-xl border-[2px] border-neutral-700 relative">
+    <section className="mb-10 rounded-2xl backdrop-blur-xl border-[2px] border-neutral-700 relative">
       <div className="block absolute top-0 left-4 -translate-y-1/2 bg-[#0A0A0A]">
         <span className="p-4 whitespace-pre opacity-0">{listTitle}</span>
         <input
@@ -176,9 +176,9 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
 
       {/* Tasks list */}
       <ul
-        className={`flex flex-col justify-start gap-2 transition-all duration-300 overflow-auto ${
+        className={`p-6 flex flex-col justify-start gap-2 transition-all duration-300 overflow-auto ${
           listData.folded && !standalone
-            ? "max-h-0 overflow-hidden"
+            ? "max-h-0 py-0 overflow-hidden"
             : standalone
             ? "max-h-max"
             : "max-h-[500px]"
