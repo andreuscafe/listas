@@ -144,7 +144,7 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
     >
       {/* Header */}
       <nav className="absolute z-10 top-0 -translate-y-1/2 w-full flex justify-between px-4">
-        <div className="block relative bg-[#0A0A0A]">
+        <div className="block relative bg-background">
           <h4 className="text-base inline p-4 whitespace-pre opacity-0">
             {listTitle}
           </h4>
@@ -161,7 +161,7 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
         <div className="flex">
           {!standalone && (
             <button
-              className={`p-2 bg-[#0A0A0A] rounded-lg transition-colors duration-300 group`}
+              className={`p-2 bg-background rounded-lg transition-colors duration-300 group`}
               onClick={() => {
                 router.push(`/app/list/${listData.id}`);
               }}
@@ -174,7 +174,7 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
           )}
 
           <button
-            className={`p-2 bg-[#0A0A0A] rounded-lg transition-colors duration-300 group ${
+            className={`p-2 bg-background rounded-lg transition-colors duration-300 group ${
               confirmDelete ? "bg-red-900" : ""
             }`}
             onClick={handleDeleteList}
@@ -190,7 +190,7 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
 
           {!standalone && (
             <button
-              className="p-2 bg-[#0A0A0A] rounded-lg transition-colors duration-300 group"
+              className="p-2 bg-background rounded-lg transition-colors duration-300 group"
               onClick={handleFoldList}
             >
               <BiChevronDown
@@ -208,7 +208,7 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
       <div
         className={`mb-10 rounded-2xl backdrop-blur-xl border-[2px] border-neutral-700 relative overflow-hidden ${
           tasks.length
-            ? "after:absolute after:top-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-b after:from-[#0A0A0A] after:via-60% after:via-[#0A0A0A] after:to-transparent after:z-10"
+            ? "after:absolute after:top-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-b after:from-background after:via-60% after:via-background after:to-transparent after:z-10 after:hidden"
             : ""
         }`}
       >
