@@ -92,10 +92,10 @@ export default function App({ listsData }: AppProps) {
           <motion.button
             layout
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            animate={{ opacity: 0.4 }}
             exit={{ opacity: 0 }}
             whileTap={{ scale: 0.95 }}
-            className="w-full py-6 opacity-40 hover:opacity-100 transition-opacity rounded-2xl border-[2px] border-white border-opacity-20"
+            className="w-full py-6 opacity-40 hover:!opacity-100 transition-opacity rounded-2xl border-[2px] border-white border-opacity-20"
             onClick={handleCreateList}
           >
             Agregar lista
