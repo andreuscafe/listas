@@ -10,7 +10,7 @@ import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { SpringTransition } from "@/lib/animations";
 
 type ListProps = {
-  listData: list;
+  listData: Omit<list, "userId">;
   standalone?: boolean;
 };
 
@@ -21,7 +21,9 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
 
   const { getListTasks } = useTaskActions();
 
-  const [tasks, setTasks] = useState(getListTasks(listData.id));
+  const [tasks, setTasks] = useState(
+    getListTasks ? getListTasks(listData.id) : []
+  );
 
   const [confirmDelete, setConfirmDelete] = useState(false);
 

@@ -14,7 +14,7 @@ import { motion } from "framer-motion";
 import { SpringTransition } from "@/lib/animations";
 
 type TaskProps = {
-  taskData: task;
+  taskData: Omit<task, "userId">;
 };
 
 export const Task: FC<TaskProps> = memo(({ taskData }) => {

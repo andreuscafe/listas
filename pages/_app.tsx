@@ -1,9 +1,11 @@
 import "@/styles/globals.css";
 import { AnimatePresence } from "framer-motion";
 import type { AppProps } from "next/app";
+import { ClerkProvider } from "@clerk/nextjs";
 
 import { Inter } from "next/font/google";
 import Head from "next/head";
+import { esES } from "@clerk/localizations";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -20,7 +22,7 @@ const defaultOgPath = "/img/OG.png";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <>
+    <ClerkProvider localization={esES} {...pageProps}>
       <Head>
         <meta name="viewport" content="width=device-width,initial-scale=1" />
 
@@ -90,6 +92,6 @@ export default function App({ Component, pageProps }: AppProps) {
       <AnimatePresence mode="wait">
         <Component {...pageProps} />
       </AnimatePresence>
-    </>
+    </ClerkProvider>
   );
 }

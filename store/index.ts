@@ -1,9 +1,10 @@
 import { createId } from "@paralleldrive/cuid2";
 import { list, task } from "@prisma/client";
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export type TasksStore = {
-  lists: list[];
+  lists: Omit<list, "userId">[];
   listActions: {
     setLists: (lists: list[]) => void;
     addList: (list?: list) => void;
@@ -13,7 +14,7 @@ export type TasksStore = {
     getListById: (id: list["id"]) => list;
   };
 
-  tasks: task[];
+  tasks: Omit<task, "userId">[];
   taskActions: {
     setTasks: (tasks: task[]) => void;
     addTask: (listId: list["id"], task?: task) => task;
@@ -21,7 +22,7 @@ export type TasksStore = {
     toggleCompleted: (id: task["id"]) => void;
     updateTask: (id: task["id"], content: task["content"]) => void;
     setPriority: (id: task["id"], priority: task["priority"]) => void;
-    getListTasks: (listId: list["id"]) => task[];
+    getListTasks: (listId: list["id"]) => Omit<task, "userId">[];
     getTaskById: (id: task["id"]) => task;
   };
 };
@@ -47,6 +48,7 @@ export const useTasksStore = create<TasksStore>((set, get) => ({
             id: createId(),
             title: "",
             createdAt: new Date(),
+            updatedAt: new Date(),
             folded: false
           }
         ]

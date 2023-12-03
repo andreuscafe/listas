@@ -6,6 +6,8 @@ import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { useEffect } from "react";
 import { BiArrowBack } from "react-icons/bi";
+import { getAuth } from "@clerk/nextjs/server";
+import { Layout } from "@/components/Layout";
 
 type ListPageProps = {
   listData: (list & { tasks: task[] }) | null;
@@ -40,7 +42,7 @@ export default function ListPage({ listData }: ListPageProps) {
   }, [setLists, setTasks, listData]);
 
   return (
-    <main className="w-full max-w-screen-sm mx-auto px-5 min-h-screen py-10 pb-20 font-inter flex flex-col justify-start">
+    <Layout>
       <header className="pb-8">
         <Link
           href={"/app"}
@@ -55,12 +57,23 @@ export default function ListPage({ listData }: ListPageProps) {
       ) : (
         <div>No se encontró esta lista.</div>
       )}
-    </main>
+    </Layout>
   );
 }
 
-export const getServerSideProps = (async (context) => {
-  if (!context.params?.id) {
+export const getServerSideProps = (async (ctx) => {
+  const { userId } = getAuth(ctx.req);
+
+  if (!userId) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false
+      }
+    };
+  }
+
+  if (!ctx.params?.id) {
     return {
       props: {
         listData: null
@@ -70,7 +83,8 @@ export const getServerSideProps = (async (context) => {
 
   const listData: list | null = await prisma.list.findFirst({
     where: {
-      id: context.params?.id as string
+      id: ctx.params?.id as string,
+      userId
     },
     include: {
       tasks: true

@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { getAuth } from "@clerk/nextjs/server";
 import { task } from "@prisma/client";
 
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
@@ -9,8 +10,16 @@ export default async function handler(
   res: NextApiResponse<task[] | task | { error: string }>
 ) {
   try {
+    const { userId } = getAuth(req);
+
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
     if (req.method === "GET") {
-      const response = await prisma.task.findMany();
+      const response = await prisma.task.findMany({
+        where: { userId }
+      });
 
       res.status(200).json(response);
     }
@@ -22,6 +31,7 @@ export default async function handler(
         where: { id: task.id || "" },
         update: {},
         create: {
+          userId,
           id: task.id,
           listId: task.listId,
           content: task.content,
@@ -35,7 +45,7 @@ export default async function handler(
       const task = req.body as task;
 
       const response = await prisma.task.update({
-        where: { id: task.id },
+        where: { id: task.id, userId },
         data: {
           ...task
         }
@@ -47,7 +57,7 @@ export default async function handler(
       const { id } = req.body as { id: string };
 
       const response = await prisma.task.delete({
-        where: { id }
+        where: { id, userId }
       });
       return res.status(200).json(response);
     }
