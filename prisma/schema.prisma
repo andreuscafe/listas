@@ -13,16 +13,20 @@ datasource db {
 
 model list {
   id        String   @id @default(cuid())
+  userId    String
   title     String
   createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
   folded    Boolean  @default(false)
   tasks     task[]
 }
 
 model task {
   id        String   @id @default(cuid())
+  userId    String
   content   String
   createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
   completed Boolean  @default(false)
   list      list     @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId    String

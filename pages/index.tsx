@@ -1,22 +1,19 @@
+import { Header } from "@/components";
 import Link from "next/link";
-import { useRouter } from "next/router";
 
 export default function Home() {
-  const router = useRouter();
-
-  // if (typeof window !== "undefined") {
-  //   router.push("/app");
-  // }
-
   return (
     <main className={`min-h-screen font-inter`}>
-      <section className="max-w-screen-lg mx-auto py-64 flex justify-center">
-        <Link
-          href={"/app"}
-          className="px-10 py-6 rounded-2xl bg-white text-black"
-        >
-          Launch app
-        </Link>
+      <section className="max-w-screen-lg mx-auto py-64 flex flex-col items-center justify-center gap-12">
+        <div className="flex flex-col items-center">
+          <Header />
+          <h1 className="text-4xl font-bold text-center">
+            Acá va a ir una landing page
+          </h1>
+          <p className="text-center text-neutral-500 mt-4">
+            Por ahora sólo iniciá sesión para ir a la app.
+          </p>
+        </div>
       </section>
     </main>
   );

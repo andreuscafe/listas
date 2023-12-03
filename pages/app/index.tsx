@@ -7,6 +7,10 @@ import { useCallback, useEffect, useState } from "react";
 import prisma from "@/lib/prisma";
 import { createList } from "@/lib/api/lists";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import { User, getAuth } from "@clerk/nextjs/server";
+import { GetServerSideProps } from "next";
+import { useUser } from "@clerk/nextjs";
+import { Layout } from "@/components/Layout";
 
 const phrases = [
   "La vida es una colección de momentos, asegúrate de vivir cada uno.",
@@ -23,6 +27,7 @@ const phrases = [
 
 type AppProps = {
   listsData: (list & { tasks: task[] })[];
+  user: User | undefined;
 };
 
 export default function App({ listsData }: AppProps) {
@@ -72,7 +77,7 @@ export default function App({ listsData }: AppProps) {
         <title>Mis listas</title>
       </Head>
 
-      <main className="w-full max-w-screen-sm mx-auto px-5 min-h-screen pb-20 font-inter flex flex-col justify-start">
+      <Layout>
         <section className="max-w-screen-lg mx-auto py-10 block w-full text-center">
           <p className="text-neutral-600">{clientPhrase}</p>
         </section>
@@ -96,13 +101,27 @@ export default function App({ listsData }: AppProps) {
             Agregar lista
           </motion.button>
         </LayoutGroup>
-      </main>
+      </Layout>
     </>
   );
 }
 
-export const getServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { userId } = getAuth(ctx.req);
+
+  if (!userId) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false
+      }
+    };
+  }
+
   const listsData: list[] = await prisma.list.findMany({
+    where: {
+      userId
+    },
     include: {
       tasks: true
     }
