@@ -36,7 +36,7 @@ export const Header = () => {
           <UserButton afterSignOutUrl="/" />
         ) : isLoaded ? (
           <Link
-            href={"/sign-in"}
+            href={"/app"}
             className="text-white opacity-80 hover:opacity-100 transition-opacity"
           >
             Ir a la app
