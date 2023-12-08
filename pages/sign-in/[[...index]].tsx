@@ -10,7 +10,7 @@ export default function Page() {
     <div className="flex items-center justify-center flex-col min-h-screen">
       <Link
         href={"/"}
-        className="inline-flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity"
+        className="inline-flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity mb-4"
       >
         <BiArrowBack />
         Volver
@@ -19,11 +19,11 @@ export default function Page() {
         appearance={{
           baseTheme: dark,
           variables: {
-            colorPrimary: "#333333"
+            colorPrimary: "#a64242"
           },
           elements: {
             card: {
-              backgroundColor: "transparent",
+              backgroundColor: "#1c1c1f",
               boxShadow: "none"
             }
           }
@@ -31,7 +31,7 @@ export default function Page() {
         afterSignInUrl={"/app"}
       />
       <style jsx global>{`
-        .cl-internal-bu19t8 {
+        .cl-internal-nl02h8 {
           display: none;
         }
       `}</style>

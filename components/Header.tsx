@@ -7,6 +7,7 @@ import {
   BiLoaderCircle,
   BiRightArrowAlt
 } from "react-icons/bi";
+import { dark } from "@clerk/themes";
 
 export const Header = () => {
   const { isLoaded, isSignedIn } = useUser();
@@ -33,7 +34,24 @@ export const Header = () => {
         </div>
 
         {isSignedIn ? (
-          <UserButton afterSignOutUrl="/" />
+          <UserButton
+            afterSignOutUrl="/"
+            appearance={{
+              baseTheme: dark,
+              variables: {
+                colorBackground: "#18181b"
+              }
+            }}
+            userProfileProps={{
+              appearance: {
+                baseTheme: dark,
+                variables: {
+                  colorBackground: "#18181b",
+                  colorPrimary: "#a64242"
+                }
+              }
+            }}
+          />
         ) : isLoaded ? (
           <Link
             href={"/app"}

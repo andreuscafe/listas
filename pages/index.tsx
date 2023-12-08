@@ -29,7 +29,7 @@ export default function Home() {
         <Link href={"/app"}>
           <motion.span
             {...basicRevealAnimation({ delay: 0.3 })}
-            className="block px-8 py-4 rounded-lg bg-white text-black hover:bg-neutral-300 transition-colors duration-200"
+            className="block px-8 py-4 rounded-lg bg-foreground text-black hover:bg-neutral-100 transition-colors duration-200"
           >
             Ir a la app
           </motion.span>
@@ -62,7 +62,7 @@ export default function Home() {
           <Link
             href="https://twitter.com/andreuscafe"
             target="_blank"
-            className="text-neutral-300"
+            className="text-primary"
           >
             @andreuscafe
           </Link>{" "}
@@ -70,11 +70,11 @@ export default function Home() {
           <Link
             href="https://twitter.com/andreuscafe"
             target="_blank"
-            className="text-neutral-300"
+            className="text-primary"
           >
             @andreuscafe
-          </Link>
-          .
+          </Link>{" "}
+          y para a quien le sirva.
         </span>
       </footer>
     </main>
