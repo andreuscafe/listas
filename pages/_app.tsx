@@ -7,6 +7,8 @@ import { Inter } from "next/font/google";
 import Head from "next/head";
 import { esES } from "@clerk/localizations";
 
+import { SpeedInsights } from "@vercel/speed-insights/next";
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400"],
@@ -96,7 +98,7 @@ export default function App({ Component, pageProps }: AppProps) {
           --font-inter: ${inter.style.fontFamily};
         }
       `}</style>
-      {/* <Header /> */}
+      <SpeedInsights />
 
       <AnimatePresence mode="wait">
         <Component {...pageProps} />
