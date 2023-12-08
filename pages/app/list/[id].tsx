@@ -8,6 +8,8 @@ import { useEffect } from "react";
 import { BiArrowBack } from "react-icons/bi";
 import { getAuth } from "@clerk/nextjs/server";
 import { Layout } from "@/components/Layout";
+import Head from "next/head";
+import { defaultTitle } from "@/pages/_app";
 
 type ListPageProps = {
   listData: (list & { tasks: task[] }) | null;
@@ -43,6 +45,11 @@ export default function ListPage({ listData }: ListPageProps) {
 
   return (
     <Layout>
+      <Head>
+        <title>
+          {listData ? `${listData.title} - ${defaultTitle}` : defaultTitle}
+        </title>
+      </Head>
       <header className="pb-8">
         <Link
           href={"/app"}

@@ -11,18 +11,19 @@ import { User, getAuth } from "@clerk/nextjs/server";
 import { GetServerSideProps } from "next";
 import { useUser } from "@clerk/nextjs";
 import { Layout } from "@/components/Layout";
+import { defaultTitle } from "../_app";
 
 const phrases = [
-  "La vida es una colección de momentos, asegúrate de vivir cada uno.",
-  "La felicidad no es un destino, es un camino que eliges caminar.",
-  "La verdadera riqueza está en las relaciones y experiencias, no en posesiones.",
-  "La gratitud transforma lo que tienes en suficiente.",
-  "Aprende a aceptar lo que no puedes cambiar y a cambiar lo que no puedes aceptar.",
-  "La mejor inversión que puedes hacer es en ti mismo.",
-  "Cada día es una página en blanco, escribe una gran historia.",
-  "La paz interior comienza cuando te aceptas a ti mismo.",
-  "No mires atrás con arrepentimiento, mira adelante con esperanza.",
-  "La vida es frágil, valora cada momento y a las personas que amas."
+  // "La vida es una colección de momentos, asegúrate de vivir cada uno.",
+  // "La felicidad no es un destino, es un camino que eliges caminar.",
+  // "La verdadera riqueza está en las relaciones y experiencias, no en posesiones.",
+  // "La gratitud transforma lo que tienes en suficiente.",
+  // "Aprende a aceptar lo que no puedes cambiar y a cambiar lo que no puedes aceptar.",
+  // "La mejor inversión que puedes hacer es en ti mismo.",
+  "Cada día es una página en blanco, escribe una gran historia."
+  // "La paz interior comienza cuando te aceptas a ti mismo.",
+  // "No mires atrás con arrepentimiento, mira adelante con esperanza.",
+  // "La vida es frágil, valora cada momento y a las personas que amas."
 ];
 
 type AppProps = {
@@ -74,7 +75,7 @@ export default function App({ listsData }: AppProps) {
   return (
     <>
       <Head>
-        <title>Mis listas</title>
+        <title>Mis listas - {defaultTitle}</title>
       </Head>
 
       <Layout>

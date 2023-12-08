@@ -13,12 +13,12 @@ const inter = Inter({
   style: "normal"
 });
 
-const defaultTitle = "Mis listas";
-const defaultDescription =
+export const defaultTitle = "Listas cafe";
+export const defaultDescription =
   "Creá listas para organizar tus tareas o recordatorios diarios.";
-const defaultDomain = "listas.andreus.cafe";
+const defaultDomain = "listas.cafe";
 const defaultUrl = `https://${defaultDomain}`;
-const defaultOgPath = "/img/OG.png";
+const defaultOgPath = "/img/og.png";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -27,7 +27,14 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="viewport" content="width=device-width,initial-scale=1" />
 
         {/* <!-- Primary Meta Tags --> */}
+        <title>{defaultTitle}</title>
         <meta name="title" content={defaultTitle} />
+        <meta name="author" content="@andreuscafe" />
+        <meta name="robots" content="index, follow" />
+        <meta name="language" content="Spanish" />
+        <meta name="keywords" content="listas, cafe, listas.cafe" />
+        <meta name="apple-mobile-web-app-title" content={defaultTitle} />
+        <meta name="application-name" content={defaultTitle} />
         <meta name="description" content={defaultDescription} />
 
         {/* <!-- Open Graph / Facebook --/> */}
@@ -37,6 +44,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta property="og:description" content={defaultDescription} />
         <meta property="og:image" content={defaultUrl + defaultOgPath} />
 
+        <meta name="color-scheme" content="dark light" />
         <meta
           name="theme-color"
           content="#fff"
@@ -44,9 +52,10 @@ export default function App({ Component, pageProps }: AppProps) {
         />
         <meta
           name="theme-color"
-          content="#111"
+          content="#18181b"
           media="(prefers-color-scheme: dark)"
         />
+        <meta name="msapplication-TileColor" content="#18181b" />
 
         {/* Facebook Meta Tags */}
         <meta property="og:url" content={defaultUrl} />

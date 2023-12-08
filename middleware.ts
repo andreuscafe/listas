@@ -6,8 +6,6 @@ const publicRoutes = ["/", "/sign-in", "/sign-up", "/forgot-password"];
 export default authMiddleware({
   publicRoutes,
   afterAuth: (auth, request, evt) => {
-    console.log("middle auth userId", auth.userId);
-
     if (!auth.userId) {
       if (publicRoutes.includes(request.nextUrl.pathname)) {
         return NextResponse.next();

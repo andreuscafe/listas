@@ -9,7 +9,6 @@ import {
 } from "react-icons/bi";
 
 export const Header = () => {
-  // console.log("header", isSignedIn, isLoaded);
   const { isLoaded, isSignedIn } = useUser();
 
   const now = new Date().toLocaleDateString("es-ES", {
@@ -32,6 +31,7 @@ export const Header = () => {
           <span className="text-neutral-500">{now}</span>
           {/* <BiRightArrowAlt size={24} className="opacity-40" /> */}
         </div>
+
         {isSignedIn ? (
           <UserButton afterSignOutUrl="/" />
         ) : isLoaded ? (
