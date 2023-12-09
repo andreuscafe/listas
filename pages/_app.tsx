@@ -8,6 +8,7 @@ import Head from "next/head";
 import { esES } from "@clerk/localizations";
 
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -103,6 +104,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <AnimatePresence mode="wait">
         <Component {...pageProps} />
       </AnimatePresence>
+      <Analytics />
     </ClerkProvider>
   );
 }

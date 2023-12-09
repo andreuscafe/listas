@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
 import { authMiddleware } from "@clerk/nextjs";
 
-const publicRoutes = ["/", "/sign-in", "/sign-up", "/forgot-password"];
+const publicRoutes = [
+  "/",
+  "/sign-in",
+  "/sign-up",
+  "/forgot-password",
+  "/_vercel/insights/view"
+];
 
 export default authMiddleware({
   publicRoutes,
