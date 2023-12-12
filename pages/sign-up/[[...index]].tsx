@@ -29,7 +29,6 @@ export default function Page() {
             }
           }
         }}
-        afterSignUpUrl={"/app"}
       />
       <style jsx global>{`
         .cl-internal-nl02h8 {

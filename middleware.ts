@@ -5,21 +5,21 @@ const publicRoutes = [
   "/",
   "/sign-in",
   "/sign-up",
+  "/sign-up/verify-email-address",
   "/forgot-password",
   "/_vercel/insights/view",
-  "/privacidad"
+  "/privacidad",
+  "/_next/data"
 ];
 
 export default authMiddleware({
   publicRoutes,
   afterAuth: (auth, request, evt) => {
-    // continue with request if the request is for /_next
-    if (request.nextUrl.pathname.startsWith("/_next")) {
-      return NextResponse.next();
-    }
-
     if (!auth.userId) {
-      if (publicRoutes.includes(request.nextUrl.pathname)) {
+      if (
+        publicRoutes.includes(request.nextUrl.pathname) ||
+        request.nextUrl.pathname.startsWith("/_next/data")
+      ) {
         return NextResponse.next();
       } else {
         return NextResponse.redirect(new URL("/sign-in", request.url));

@@ -31,7 +31,6 @@ export default function Page() {
             }
           }
         }}
-        afterSignInUrl={"/app"}
       />
       <style jsx global>{`
         .cl-internal-nl02h8 {
