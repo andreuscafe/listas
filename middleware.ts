@@ -6,7 +6,8 @@ const publicRoutes = [
   "/sign-in",
   "/sign-up",
   "/forgot-password",
-  "/_vercel/insights/view"
+  "/_vercel/insights/view",
+  "/privacidad"
 ];
 
 export default authMiddleware({

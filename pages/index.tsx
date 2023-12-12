@@ -7,9 +7,7 @@ import { basicRevealAnimation } from "@/lib/animations";
 
 export default function Home() {
   return (
-    <main
-      className={`overflow-hidden md:overflow-auto h-screen md:h-auto min-h-screen font-inter pb-16`}
-    >
+    <main className={`min-h-screen font-inter pb-16`}>
       {/* <Header /> */}
       <section className="max-w-screen-lg mx-auto py-24 px-8 flex flex-col items-center justify-center gap-12">
         <div className="flex flex-col items-center">
@@ -65,17 +63,15 @@ export default function Home() {
             className="text-primary"
           >
             @andreuscafe
-          </Link>{" "}
-          para{" "}
-          <Link
-            href="https://twitter.com/andreuscafe"
-            target="_blank"
-            className="text-primary"
-          >
-            @andreuscafe
-          </Link>{" "}
-          y para a quien le sirva.
+          </Link>
         </span>
+
+        <br />
+        <br />
+
+        <Link href={"/privacidad"} className="text-primary">
+          Política de privacidad
+        </Link>
       </footer>
     </main>
   );

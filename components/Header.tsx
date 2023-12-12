@@ -1,15 +1,9 @@
 import Link from "next/link";
 import { UserButton, useUser } from "@clerk/nextjs";
-import {
-  BiLeftArrowAlt,
-  BiLoader,
-  BiLoaderAlt,
-  BiLoaderCircle,
-  BiRightArrowAlt
-} from "react-icons/bi";
+import { BiLoaderAlt } from "react-icons/bi";
 import { dark } from "@clerk/themes";
 
-export const Header = () => {
+export const Header = ({ children }: { children?: React.ReactNode }) => {
   const { isLoaded, isSignedIn } = useUser();
 
   const now = new Date().toLocaleDateString("es-ES", {
@@ -27,40 +21,46 @@ export const Header = () => {
           "max-w-screen-sm mx-auto h-16 px-6 flex items-center justify-between relative bg-background"
         }
       >
-        <div className="flex gap-1">
-          {/* <BiLeftArrowAlt size={24} className="opacity-40" /> */}
-          <span className="text-neutral-500">{now}</span>
-          {/* <BiRightArrowAlt size={24} className="opacity-40" /> */}
-        </div>
-
-        {isSignedIn ? (
-          <UserButton
-            afterSignOutUrl="/"
-            appearance={{
-              baseTheme: dark,
-              variables: {
-                colorBackground: "#18181b"
-              }
-            }}
-            userProfileProps={{
-              appearance: {
-                baseTheme: dark,
-                variables: {
-                  colorBackground: "#18181b",
-                  colorPrimary: "#a64242"
-                }
-              }
-            }}
-          />
-        ) : isLoaded ? (
-          <Link
-            href={"/app"}
-            className="text-white opacity-80 hover:opacity-100 transition-opacity"
-          >
-            Ir a la app
-          </Link>
+        {children ? (
+          children
         ) : (
-          <BiLoaderAlt size={32} className="animate-spin" />
+          <>
+            <div className="flex gap-1">
+              {/* <BiLeftArrowAlt size={24} className="opacity-40" /> */}
+              <span className="text-neutral-500">{now}</span>
+              {/* <BiRightArrowAlt size={24} className="opacity-40" /> */}
+            </div>
+
+            {isSignedIn ? (
+              <UserButton
+                afterSignOutUrl="/"
+                appearance={{
+                  baseTheme: dark,
+                  variables: {
+                    colorBackground: "#18181b"
+                  }
+                }}
+                userProfileProps={{
+                  appearance: {
+                    baseTheme: dark,
+                    variables: {
+                      colorBackground: "#18181b",
+                      colorPrimary: "#a64242"
+                    }
+                  }
+                }}
+              />
+            ) : isLoaded ? (
+              <Link
+                href={"/app"}
+                className="text-white opacity-80 hover:opacity-100 transition-opacity"
+              >
+                Ir a la app
+              </Link>
+            ) : (
+              <BiLoaderAlt size={32} className="animate-spin" />
+            )}
+          </>
         )}
       </div>
     </header>

@@ -75,7 +75,11 @@ export default function App({ listsData }: AppProps) {
   return (
     <>
       <Head>
-        <title>Mis listas - {defaultTitle}</title>
+        {defaultTitle ? (
+          <title>Mis listas - {defaultTitle}</title>
+        ) : (
+          <title>Mis listas</title>
+        )}
       </Head>
 
       <Layout>

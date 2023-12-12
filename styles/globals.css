@@ -28,3 +28,8 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+.privacidad p {
+  color: rgb(163, 163, 163);
+  margin-bottom: 1rem;
+}
