@@ -13,6 +13,11 @@ const publicRoutes = [
 export default authMiddleware({
   publicRoutes,
   afterAuth: (auth, request, evt) => {
+    // continue with request if the request is for /_next
+    if (request.nextUrl.pathname.startsWith("/_next")) {
+      return NextResponse.next();
+    }
+
     if (!auth.userId) {
       if (publicRoutes.includes(request.nextUrl.pathname)) {
         return NextResponse.next();
