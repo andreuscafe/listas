@@ -21,7 +21,7 @@ export const defaultDescription =
   "Creá listas para organizar tus tareas o recordatorios diarios.";
 const defaultDomain = "listas.cafe";
 const defaultUrl = `https://${defaultDomain}`;
-const defaultOgPath = "/img/og.png";
+const defaultOgPath = "/img/og-image.png";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -69,11 +69,13 @@ export default function App({ Component, pageProps }: AppProps) {
 
         {/* Twitter Meta Tags */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta property="twitter:domain" content={defaultDomain} />
-        <meta property="twitter:url" content={defaultUrl} />
+        <meta name="twitter:site" content="@andreuscafe" />
+        <meta name="twitter:creator" content="@andreuscafe" />
         <meta name="twitter:title" content={defaultTitle} />
         <meta name="twitter:description" content={defaultDescription} />
         <meta name="twitter:image" content={defaultUrl + defaultOgPath} />
+        <meta name="twitter:domain" content={defaultDomain} />
+        <meta name="twitter:url" content={defaultUrl} />
 
         <link
           rel="apple-touch-icon"
