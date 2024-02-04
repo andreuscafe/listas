@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { UserButton, useUser } from "@clerk/nextjs";
-import { BiLoaderAlt } from "react-icons/bi";
+import { BiColumns, BiListUl, BiLoaderAlt } from "react-icons/bi";
 import { dark } from "@clerk/themes";
+import { usePathname } from "next/navigation";
 
 export const Header = ({ children }: { children?: React.ReactNode }) => {
   const { isLoaded, isSignedIn } = useUser();
+  const pathname = usePathname();
 
   const now = new Date().toLocaleDateString("es-ES", {
     month: "short",
@@ -18,7 +20,7 @@ export const Header = ({ children }: { children?: React.ReactNode }) => {
     >
       <div
         className={
-          "max-w-screen-sm mx-auto h-16 px-6 flex items-center justify-between relative bg-background"
+          "max-w-screen-md mx-auto h-16 px-6 flex items-center justify-between relative bg-background"
         }
       >
         {children ? (
@@ -32,24 +34,46 @@ export const Header = ({ children }: { children?: React.ReactNode }) => {
             </div>
 
             {isSignedIn ? (
-              <UserButton
-                afterSignOutUrl="/"
-                appearance={{
-                  baseTheme: dark,
-                  variables: {
-                    colorBackground: "#18181b"
-                  }
-                }}
-                userProfileProps={{
-                  appearance: {
+              <div className="flex justify-between items-center gap-4">
+                <div className="flex gap-2">
+                  <Link
+                    href={"/app"}
+                    className={
+                      "text-white opacity-60 hover:opacity-80 transition-opacity" +
+                      (pathname === "/app" ? " opacity-80" : "")
+                    }
+                  >
+                    Listas
+                  </Link>{" "}
+                  <Link
+                    href={"/app/boards"}
+                    className={
+                      "text-white opacity-60 hover:opacity-80 transition-opacity" +
+                      (pathname === "/app/boards" ? " opacity-80" : "")
+                    }
+                  >
+                    Tableros
+                  </Link>
+                </div>
+                <UserButton
+                  afterSignOutUrl="/"
+                  appearance={{
                     baseTheme: dark,
                     variables: {
-                      colorBackground: "#18181b",
-                      colorPrimary: "#a64242"
+                      colorBackground: "#18181b"
                     }
-                  }
-                }}
-              />
+                  }}
+                  userProfileProps={{
+                    appearance: {
+                      baseTheme: dark,
+                      variables: {
+                        colorBackground: "#18181b",
+                        colorPrimary: "#a64242"
+                      }
+                    }
+                  }}
+                />
+              </div>
             ) : isLoaded ? (
               <Link
                 href={"/app"}
