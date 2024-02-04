@@ -35,6 +35,23 @@ export default function Page() {
           display: none;
         }
       `}</style>
+
+      <p className="mt-8 text-center">
+        Si es tu primera vez acá, tenes que registrarte primero. <br />
+        Si tenes problemas para ingresar, mandame un DM a{" "}
+        <a
+          href="https://twitter.com/AndreusCafe"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary brightness-100 hover:brightness-150 transition-all"
+        >
+          @andreuscafe
+        </a>
+        . <br />
+        <span className="text-sm text-foreground opacity-40 mt-2 block">
+          A veces anda medio para el culo.
+        </span>
+      </p>
     </div>
   );
 }
