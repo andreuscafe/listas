@@ -9,7 +9,6 @@ import { createList } from "@/lib/api/lists";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { User, getAuth } from "@clerk/nextjs/server";
 import { GetServerSideProps } from "next";
-import { useUser } from "@clerk/nextjs";
 import { Layout } from "@/components/Layout";
 import { defaultTitle } from "../_app";
 
@@ -117,7 +116,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   if (!userId) {
     return {
       redirect: {
-        destination: "/",
+        destination: "/sign-in",
         permanent: false
       }
     };
