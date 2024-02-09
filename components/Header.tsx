@@ -16,7 +16,9 @@ export const Header = ({ children }: { children?: React.ReactNode }) => {
 
   return (
     <header
-      className={"w-full fixed z-20 top-0 left-0 border-b border-b-neutral-700"}
+      className={
+        "w-full fixed z-20 top-0 left-0 border-b-2 border-b-neutral-700"
+      }
     >
       <div
         className={
@@ -34,46 +36,24 @@ export const Header = ({ children }: { children?: React.ReactNode }) => {
             </div>
 
             {isSignedIn ? (
-              <div className="flex justify-between items-center gap-4">
-                <div className="flex gap-2">
-                  <Link
-                    href={"/app"}
-                    className={
-                      "text-white opacity-60 hover:opacity-80 transition-opacity" +
-                      (pathname === "/app" ? " opacity-80" : "")
-                    }
-                  >
-                    Listas
-                  </Link>{" "}
-                  <Link
-                    href={"/app/boards"}
-                    className={
-                      "text-white opacity-60 hover:opacity-80 transition-opacity" +
-                      (pathname === "/app/boards" ? " opacity-80" : "")
-                    }
-                  >
-                    Tableros
-                  </Link>
-                </div>
-                <UserButton
-                  afterSignOutUrl="/"
-                  appearance={{
+              <UserButton
+                afterSignOutUrl="/"
+                appearance={{
+                  baseTheme: dark,
+                  variables: {
+                    colorBackground: "#18181b"
+                  }
+                }}
+                userProfileProps={{
+                  appearance: {
                     baseTheme: dark,
                     variables: {
-                      colorBackground: "#18181b"
+                      colorBackground: "#18181b",
+                      colorPrimary: "#a64242"
                     }
-                  }}
-                  userProfileProps={{
-                    appearance: {
-                      baseTheme: dark,
-                      variables: {
-                        colorBackground: "#18181b",
-                        colorPrimary: "#a64242"
-                      }
-                    }
-                  }}
-                />
-              </div>
+                  }
+                }}
+              />
             ) : isLoaded ? (
               <Link
                 href={"/app"}
