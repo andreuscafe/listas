@@ -39,6 +39,7 @@ export const NewItemInput: FC<NewItemInputProps> = ({ listId }) => {
         className="text-base placeholder:text-[#666] text-neutral-400 bg-transparent w-full resize-none outline-none focus:bg-white focus:bg-opacity-5 py-1 px-2 rounded"
         rows={1}
         onKeyDown={handleKeyDown}
+        maxLength={480}
         id="new-task-input"
       />
     </li>

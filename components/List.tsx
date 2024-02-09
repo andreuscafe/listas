@@ -208,10 +208,14 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
 
       {/* Wrapper */}
       <div
-        className={`mb-10 rounded-2xl backdrop-blur-xl border-[2px] border-neutral-700 relative overflow-hidden ${
+        className={`mb-10 rounded-2xl backdrop-blur-xl border-neutral-700 relative overflow-hidden ${
           tasks.length
             ? "after:absolute after:top-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-b after:from-background after:via-60% after:via-background after:to-transparent after:z-10 after:hidden"
             : ""
+        } ${
+          listData.folded && !standalone
+            ? "border-x-2 border-y-[1px] transition-all duration-300"
+            : "border-2"
         }`}
       >
         {/* Tasks list */}

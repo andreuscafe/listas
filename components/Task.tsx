@@ -184,6 +184,7 @@ export const Task: FC<TaskProps> = memo(({ taskData }) => {
           onKeyDown={handleKeyDown}
           onChange={handleChange}
           data-taskid={taskData.id}
+          maxLength={480}
           autoComplete="off"
           spellCheck="false"
         />
