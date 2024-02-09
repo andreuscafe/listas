@@ -156,6 +156,7 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
             defaultValue={listData.title}
             autoComplete="off"
             spellCheck="false"
+            maxLength={50}
             id={`list-title-${listData.id}`}
           />
         </div>

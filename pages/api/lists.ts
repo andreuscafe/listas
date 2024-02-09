@@ -26,6 +26,14 @@ export default async function handler(
   if (req.method === "POST") {
     const list = req.body as list;
 
+    if (!list.id) {
+      return res.status(400).json({ error: "List ID is required" });
+    } else if (list.title && list.title.length > 50) {
+      return res
+        .status(400)
+        .json({ error: "List title is too long (Max: 50 characters)" });
+    }
+
     const response = await prisma.list.upsert({
       where: { id: list.id || "" },
       update: {},
@@ -41,6 +49,14 @@ export default async function handler(
   if (req.method === "PUT") {
     const list = req.body as list;
 
+    if (!list.id) {
+      return res.status(400).json({ error: "List ID is required" });
+    } else if (list.title && list.title.length > 50) {
+      return res
+        .status(400)
+        .json({ error: "List title is too long (Max: 50 characters)" });
+    }
+
     const response = await prisma.list.update({
       where: { id: list.id, userId },
       data: {
@@ -53,6 +69,10 @@ export default async function handler(
 
   if (req.method === "DELETE") {
     const { id } = req.body as { id: string };
+
+    if (!id) {
+      return res.status(400).json({ error: "List ID is required" });
+    }
 
     const response = await prisma.list.delete({
       where: { id, userId }
