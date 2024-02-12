@@ -13,11 +13,11 @@ import ReactTextareaAutosize from "react-textarea-autosize";
 import { motion } from "framer-motion";
 import { SpringTransition } from "@/lib/animations";
 
-type TaskProps = {
+type ListTaskProps = {
   taskData: Omit<task, "userId">;
 };
 
-export const Task: FC<TaskProps> = memo(({ taskData }) => {
+export const ListTask: FC<ListTaskProps> = memo(({ taskData }) => {
   const contentTimer = useRef<NodeJS.Timeout>();
   const priorityTimer = useRef<NodeJS.Timeout>();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -211,4 +211,4 @@ export const Task: FC<TaskProps> = memo(({ taskData }) => {
   );
 });
 
-Task.displayName = "Task";
+ListTask.displayName = "Task";

@@ -1,7 +1,7 @@
 import { useTaskActions } from "@/store";
 import { FC, memo, useCallback, useEffect, useRef, useState } from "react";
 import { BiChevronDown, BiRightTopArrowCircle, BiX } from "react-icons/bi";
-import { Task } from "./Task";
+import { Task } from "./TasksList/ListTask";
 import { NewItemInput } from "./NewItemInput";
 import { deleteListById, foldList, updateList } from "@/lib/api/lists";
 import { useRouter } from "next/router";

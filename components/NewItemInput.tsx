@@ -5,9 +5,10 @@ import { list } from "@prisma/client";
 
 type NewItemInputProps = {
   listId: list["id"];
+  className?: string;
 };
 
-export const NewItemInput: FC<NewItemInputProps> = ({ listId }) => {
+export const NewItemInput: FC<NewItemInputProps> = ({ listId, className }) => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -31,8 +32,9 @@ export const NewItemInput: FC<NewItemInputProps> = ({ listId }) => {
   };
 
   return (
-    <li className={`relative flex gap-1 items-start leading-6 group/item`}>
-      {/* <BiCircle size={36} className="flex-shrink-0 opacity-20" /> */}
+    <li
+      className={`relative flex gap-1 items-start leading-6 group/item ${className}`}
+    >
       <TextareaAutosize
         ref={textAreaRef}
         placeholder="Escribí algo..."
