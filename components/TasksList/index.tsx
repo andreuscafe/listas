@@ -13,8 +13,6 @@ type TasksListProps = {
 
 export const TasksList: FC<TasksListProps> = memo(
   ({ listData, standalone, tasks }) => {
-    const ads = 123;
-
     return (
       <motion.ul
         initial={{

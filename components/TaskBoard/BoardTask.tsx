@@ -2,13 +2,12 @@ import {
   completeTask,
   createTask,
   deleteTask,
-  updateTask,
-  updateTaskPriority
+  updateTask
 } from "@/lib/api/tasks";
 import { useTaskActions } from "@/store";
 import { task } from "@prisma/client";
 import { FC, memo, useCallback, useRef, useState } from "react";
-import { BiCheck, BiX } from "react-icons/bi";
+import { BiX } from "react-icons/bi";
 import ReactTextareaAutosize from "react-textarea-autosize";
 import { motion } from "framer-motion";
 import { SpringTransition } from "@/lib/animations";
@@ -71,7 +70,7 @@ export const BoardTask: FC<BoardTaskProps> = memo(({ taskData }) => {
 
   const handleComplete = async (id: task["id"]) => {
     setCompleted(!completed);
-    await completeTask(id);
+    await completeTask(id, taskData.listId);
   };
 
   const handleDeleteButton = useCallback(
@@ -93,11 +92,12 @@ export const BoardTask: FC<BoardTaskProps> = memo(({ taskData }) => {
   return (
     <motion.div
       layout
+      draggable={!editable}
       initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -10 }}
       transition={SpringTransition}
-      className={`group/item rounded-lg transition-colors duration-200 overflow-hidden border border-neutral-700 ${
+      className={`group/item rounded-lg bg-background transition-colors duration-200 overflow-hidden border border-neutral-700 ${
         priority === 3
           ? "order-1"
           : priority === 2

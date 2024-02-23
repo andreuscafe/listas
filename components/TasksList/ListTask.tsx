@@ -23,7 +23,9 @@ export const ListTask: FC<ListTaskProps> = memo(({ taskData }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { getTaskById } = useTaskActions();
 
-  const [completed, setCompleted] = useState(taskData.completed);
+  const [completed, setCompleted] = useState(
+    taskData.completed || taskData.status === 3
+  );
   const [priority, setPriority] = useState(taskData.priority);
 
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -69,7 +71,7 @@ export const ListTask: FC<ListTaskProps> = memo(({ taskData }) => {
 
   const handleComplete = async (id: task["id"]) => {
     setCompleted(!completed);
-    await completeTask(id);
+    await completeTask(id, taskData.listId, !completed);
   };
 
   const handleDeleteButton = useCallback(async () => {

@@ -18,6 +18,7 @@ model list {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
   folded    Boolean  @default(false)
+  mode      Int      @default(1) // 1: list, 2: board
   tasks     task[]
 }
 
@@ -31,4 +32,5 @@ model task {
   list      list     @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId    String
   priority  Int      @default(0)
+  status    Int      @default(1) // 1: to do, 2: in progress, 3: done
 }

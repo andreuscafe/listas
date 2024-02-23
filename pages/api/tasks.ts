@@ -43,7 +43,8 @@ export default async function handler(
           id: task.id,
           listId: task.listId,
           content: task.content,
-          completed: task.completed
+          completed: task.completed,
+          status: task.status
         }
       });
       return res.status(200).json(response);

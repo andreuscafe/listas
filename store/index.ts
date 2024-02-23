@@ -19,7 +19,7 @@ export type TasksStore = {
     setTasks: (tasks: task[]) => void;
     addTask: (listId: list["id"], task?: task) => task;
     removeTask: (id: task["id"]) => void;
-    toggleCompleted: (id: task["id"]) => void;
+    toggleCompleted: (id: task["id"], completed?: boolean) => boolean;
     updateTask: (id: task["id"], content: task["content"]) => void;
     setPriority: (id: task["id"], priority: task["priority"]) => void;
     getListTasks: (listId: list["id"]) => Omit<task, "userId">[];
@@ -49,7 +49,8 @@ export const useTasksStore = create<TasksStore>((set, get) => ({
             title: "",
             createdAt: new Date(),
             updatedAt: new Date(),
-            folded: false
+            folded: false,
+            mode: 1
           }
         ]
       })),
@@ -103,23 +104,27 @@ export const useTasksStore = create<TasksStore>((set, get) => ({
       set((state) => ({
         tasks: state.tasks.filter((task) => task.id !== id)
       })),
-    toggleCompleted: (id) => {
-      let completed;
+    toggleCompleted: (id, completed) => {
+      let c = completed;
       set((state) => {
         return {
           tasks: state.tasks.map((task) => {
             if (task.id === id) {
-              completed = !task.completed;
+              c = completed === undefined ? !task.completed : completed;
               return {
                 ...task,
-                completed: completed
+                completed: c,
+                status: completed ? 3 : 2
               };
             }
             return task;
           })
         };
       });
-      return completed;
+
+      console.log(`Set ${id} completed`, c);
+
+      return c as boolean;
     },
     updateTask: (id, content) =>
       set((state) => ({

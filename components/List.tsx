@@ -2,22 +2,14 @@ import { useTaskActions } from "@/store";
 import { FC, memo, useCallback, useEffect, useRef, useState } from "react";
 import {
   BiArrowBack,
-  BiArrowFromLeft,
-  BiBarChart,
   BiBarChartSquare,
   BiChevronDown,
-  BiRightTopArrowCircle,
-  BiSolidArrowFromLeft,
-  BiSolidDashboard,
   BiX
 } from "react-icons/bi";
-import { Task } from "./TasksList/ListTask";
-import { NewItemInput } from "./NewItemInput";
 import { deleteListById, foldList, updateList } from "@/lib/api/lists";
 import { useRouter } from "next/router";
 import { list } from "@prisma/client";
-import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
-import { SpringTransition } from "@/lib/animations";
+import { LayoutGroup, motion } from "framer-motion";
 import { TasksList } from "./TasksList";
 import { TasksBoard } from "./TaskBoard";
 
@@ -120,9 +112,11 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
     if (window) {
       window.removeEventListener("newtask", refreshTasks as EventListener);
       window.removeEventListener("removedtask", refreshTasks as EventListener);
+      window.removeEventListener("completetask", refreshTasks as EventListener);
 
       window.addEventListener("newtask", refreshTasks as EventListener);
       window.addEventListener("removedtask", refreshTasks as EventListener);
+      window.addEventListener("completetask", refreshTasks as EventListener);
     }
 
     return () => {
@@ -130,6 +124,10 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
         window.removeEventListener("newtask", refreshTasks as EventListener);
         window.removeEventListener(
           "removedtask",
+          refreshTasks as EventListener
+        );
+        window.removeEventListener(
+          "completetask",
           refreshTasks as EventListener
         );
       }
@@ -162,7 +160,7 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
       className="relative"
     >
       {/* Header */}
-      <nav className="absolute z-10 top-0 -translate-y-1/2 w-full flex justify-between px-4">
+      <nav className="absolute z-10 top-0 -translate-y-1/2 w-full flex justify-between px-[0.6rem]">
         <div className="block relative bg-background">
           <h4 className="text-base inline p-4 whitespace-pre opacity-0">
             {listTitle}
@@ -252,12 +250,14 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
         <LayoutGroup>
           {isBoard ? (
             <TasksBoard
+              key={`${listData.id}-board`}
               listData={listData}
               tasks={tasks}
               standalone={standalone}
             />
           ) : (
             <TasksList
+              key={`${listData.id}-list`}
               listData={listData}
               tasks={tasks}
               standalone={standalone}

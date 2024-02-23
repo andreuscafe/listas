@@ -12,7 +12,7 @@ import { esES } from "@clerk/localizations";
 
 const inter = Inter({
   subsets: ["latin"],
-  weight: ["400"],
+  weight: ["300", "400", "500", "600"],
   style: "normal"
 });
 

@@ -6,9 +6,14 @@ import { list } from "@prisma/client";
 type NewItemInputProps = {
   listId: list["id"];
   className?: string;
+  status?: 1 | 2 | 3;
 };
 
-export const NewItemInput: FC<NewItemInputProps> = ({ listId, className }) => {
+export const NewItemInput: FC<NewItemInputProps> = ({
+  listId,
+  className,
+  status
+}) => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -19,7 +24,9 @@ export const NewItemInput: FC<NewItemInputProps> = ({ listId, className }) => {
         return;
       }
 
-      const newTask = await createTask(listId, e.currentTarget.value);
+      console.log(`Creating task with status ${status}`);
+
+      const newTask = await createTask(listId, e.currentTarget.value, status);
 
       if (!newTask) {
         return;

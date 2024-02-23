@@ -1,6 +1,6 @@
 import { SpringTransition } from "@/lib/animations";
 import { list, task } from "@prisma/client";
-import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { FC, memo } from "react";
 import { NewItemInput } from "../NewItemInput";
 import { BoardTask } from "./BoardTask";
@@ -11,10 +11,20 @@ type BoardListProps = {
   standalone?: boolean;
   title?: string;
   color?: string;
+  status: 1 | 2 | 3;
 };
 
 export const BoardList: FC<BoardListProps> = memo(
-  ({ listData, standalone, tasks, title = "Lista", color = "text-white" }) => {
+  ({
+    listData,
+    standalone,
+    tasks,
+    title = "Lista",
+    color = "text-[#F5F5F5]",
+    status
+  }) => {
+    console.log(`Tasks of ${title}`, tasks);
+
     return (
       <motion.div
         className="flex-1 flex flex-col gap-2 overflow-hidden relative"
@@ -30,7 +40,7 @@ export const BoardList: FC<BoardListProps> = memo(
         }}
         transition={SpringTransition}
       >
-        <h2 className={`font-bold ${color}`}>{title}</h2>
+        <h2 className={`font-medium ${color}`}>{title}</h2>
 
         <motion.ul
           className={`box-content flex flex-col justify-start gap-2 overflow-hidden relative`}
@@ -41,7 +51,11 @@ export const BoardList: FC<BoardListProps> = memo(
             ))}
           </AnimatePresence>
 
-          <NewItemInput listId={listData.id} className="order-last" />
+          <NewItemInput
+            listId={listData.id}
+            className="!order-[10001] rounded-lg overflow-hidden"
+            status={status}
+          />
         </motion.ul>
       </motion.div>
     );

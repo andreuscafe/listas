@@ -8,7 +8,7 @@ export const timeAgo = (timestamp: Date, timeOnly?: boolean): string => {
 };
 
 export const dispatchEvent = (
-  eventName: "newtask" | "removedtask",
+  eventName: "newtask" | "removedtask" | "completetask" | "updatetask",
   detail: any
 ) => {
   setTimeout(() => {
