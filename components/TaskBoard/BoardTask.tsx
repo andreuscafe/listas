@@ -4,7 +4,7 @@ import {
   deleteTask,
   updateTask
 } from "@/lib/api/tasks";
-import { useTaskActions } from "@/store";
+import { useTaskActions } from "@/store/useTasksStore";
 import { task } from "@prisma/client";
 import { FC, memo, useCallback, useRef, useState } from "react";
 import { BiX } from "react-icons/bi";

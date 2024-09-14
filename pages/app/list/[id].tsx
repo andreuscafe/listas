@@ -1,6 +1,6 @@
 import { List } from "@/components/List";
 import prisma from "@/lib/prisma";
-import { useList, useListActions, useTaskActions } from "@/store";
+import { useList, useListActions, useTaskActions } from "@/store/useTasksStore";
 import { list, task } from "@prisma/client";
 import { GetServerSideProps } from "next";
 import Link from "next/link";

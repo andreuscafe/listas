@@ -2,17 +2,18 @@ import Link from "next/link";
 import { UserButton, useUser } from "@clerk/nextjs";
 import { BiLoaderAlt } from "react-icons/bi";
 import { dark } from "@clerk/themes";
-import { usePathname } from "next/navigation";
+import { useAppStore } from "@/store/useAppStore";
 
 export const Header = ({ children }: { children?: React.ReactNode }) => {
   const { isLoaded, isSignedIn } = useUser();
-  const pathname = usePathname();
 
   const now = new Date().toLocaleDateString("es-ES", {
     month: "short",
     day: "numeric",
     year: "numeric"
   });
+
+  const { setIsClockViewOpen } = useAppStore();
 
   return (
     <header
@@ -30,9 +31,12 @@ export const Header = ({ children }: { children?: React.ReactNode }) => {
         ) : (
           <>
             <div className="flex gap-1">
-              {/* <BiLeftArrowAlt size={24} className="opacity-40" /> */}
-              <span className="text-neutral-500">{now}</span>
-              {/* <BiRightArrowAlt size={24} className="opacity-40" /> */}
+              <span
+                className="text-neutral-500 cursor-pointer hover:text-neutral-100 transition-colors"
+                onClick={() => setIsClockViewOpen(true)}
+              >
+                {now}
+              </span>
             </div>
 
             {isSignedIn ? (

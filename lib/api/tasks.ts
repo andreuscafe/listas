@@ -1,5 +1,5 @@
 import { createId } from "@paralleldrive/cuid2";
-import { useTasksStore } from "@/store";
+import { useTasksStore } from "@/store/useTasksStore";
 import { task } from "@prisma/client";
 import { dispatchEvent } from "../utils";
 

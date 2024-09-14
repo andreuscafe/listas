@@ -1,0 +1,73 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,400i,700");
+@import url("https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap");
+
+.wrapper {
+  font-family: Montserrat, sans-serif;
+  font-family: "Major Mono Display", monospace;
+  --white: #fff;
+  --black: #333;
+  --orange: #ffaa00;
+
+  --bg: var(--black);
+  --fg: var(--white);
+  --accent: var(--orange);
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  background-color: var(--bg);
+  transition: background-color 2s ease-in-out;
+  user-select: none;
+
+  color: var(--fg);
+
+  .close {
+    position: absolute;
+    top: 1rem;
+    right: 3rem;
+    color: var(--fg);
+    font-size: 4rem;
+    cursor: pointer;
+
+    opacity: 0.1;
+    transition: opacity 0.3s ease-in-out;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .time {
+    font-size: 16vmin;
+    font-weight: bold;
+    color: #aaa;
+
+    .hours,
+    .minutes,
+    .seconds {
+      color: var(--fg);
+      transition: color 2s ease-in-out;
+    }
+  }
+
+  .date {
+    font-size: 12.5vmin;
+    font-weight: 100;
+
+    color: var(--accent);
+  }
+
+  .action {
+    font-weight: 900;
+    transition: color 2s ease-in-out;
+  }
+}

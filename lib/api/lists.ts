@@ -1,6 +1,6 @@
 import { list } from "@prisma/client";
 import { createId } from "@paralleldrive/cuid2";
-import { useTasksStore } from "@/store";
+import { useTasksStore } from "@/store/useTasksStore";
 
 export const getLists = async () => {
   const res = await fetch("/api/lists");

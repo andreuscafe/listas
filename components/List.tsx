@@ -1,4 +1,4 @@
-import { useTaskActions } from "@/store";
+import { useTaskActions } from "@/store/useTasksStore";
 import { FC, memo, useCallback, useEffect, useRef, useState } from "react";
 import {
   BiArrowBack,

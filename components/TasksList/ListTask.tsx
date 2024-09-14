@@ -5,7 +5,7 @@ import {
   updateTask,
   updateTaskPriority
 } from "@/lib/api/tasks";
-import { useTaskActions } from "@/store";
+import { useTaskActions } from "@/store/useTasksStore";
 import { task } from "@prisma/client";
 import { FC, memo, useCallback, useRef, useState } from "react";
 import { BiCheck, BiX } from "react-icons/bi";

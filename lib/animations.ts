@@ -85,3 +85,16 @@ export const basicRevealAnimation = ({
     delay
   }
 });
+
+export const basicFadeZoomAnimation = ({
+  duration = 0.5,
+  ease = basicEase
+}: {
+  duration?: number;
+  ease?: number[];
+}) => ({
+  initial: { opacity: 0, scale: 0.9 },
+  animate: { opacity: 1, scale: 1 },
+  exit: { opacity: 0, scale: 0.9 },
+  transition: { duration, ease }
+});

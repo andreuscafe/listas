@@ -1,5 +1,9 @@
 import { List } from "@/components/List";
-import { useListActions, useLists, useTaskActions } from "@/store";
+import {
+  useListActions,
+  useLists,
+  useTaskActions
+} from "@/store/useTasksStore";
 import { list, task } from "@prisma/client";
 import Head from "next/head";
 import { useCallback, useEffect, useState } from "react";
@@ -12,6 +16,8 @@ import { GetServerSideProps } from "next";
 import { Layout } from "@/components/Layout";
 import { defaultTitle } from "../_app";
 import { SpringTransition } from "@/lib/animations";
+import { useAppStore } from "@/store/useAppStore";
+import { ClockView } from "@/components/ClockView";
 
 const phrases = [
   // "La vida es una colección de momentos, asegúrate de vivir cada uno.",
@@ -36,6 +42,7 @@ export default function App({ listsData }: AppProps) {
   const { setLists } = useListActions();
   const { setTasks } = useTaskActions();
   const [clientPhrase, setClientPhrase] = useState(phrases[0]);
+  const { isClockViewOpen } = useAppStore();
 
   useEffect(() => {
     setLists(
@@ -81,6 +88,8 @@ export default function App({ listsData }: AppProps) {
           <title>Mis listas</title>
         )}
       </Head>
+
+      <AnimatePresence>{isClockViewOpen && <ClockView />}</AnimatePresence>
 
       <Layout>
         <section className="max-w-screen-lg mx-auto py-10 block w-full text-center">

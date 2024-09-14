@@ -4,7 +4,7 @@ import { FC, memo } from "react";
 import { NewItemInput } from "../NewItemInput";
 import { BoardTask } from "./BoardTask";
 import { updateTaskStatus } from "@/lib/api/tasks";
-import { useTaskActions } from "@/store";
+import { useTaskActions } from "@/store/useTasksStore";
 
 type BoardListProps = {
   listData: Omit<list, "userId">;
