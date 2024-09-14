@@ -9,9 +9,10 @@ import {
 import { deleteListById, foldList, updateList } from "@/lib/api/lists";
 import { useRouter } from "next/router";
 import { list } from "@prisma/client";
-import { LayoutGroup, motion } from "framer-motion";
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { TasksList } from "./TasksList";
 import { TasksBoard } from "./TaskBoard";
+import { SpringTransition } from "@/lib/animations";
 
 type ListProps = {
   listData: Omit<list, "userId">;
@@ -151,11 +152,7 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
           duration: 0.3
         }
       }}
-      transition={{
-        type: "spring",
-        stiffness: 300,
-        damping: 30
-      }}
+      transition={SpringTransition}
       layout="position"
       className="relative"
     >
@@ -235,8 +232,14 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
       </nav>
 
       {/* Wrapper */}
-      <div
-        className={`mb-10 rounded-2xl backdrop-blur-xl border-neutral-700 relative overflow-hidden ${
+      <motion.div
+        layout
+        transition={SpringTransition}
+        animate={{
+          originX: 0,
+          originY: 0
+        }}
+        className={`mb-10 rounded-2xl bg-background border-neutral-700 relative overflow-hidden ${
           tasks.length
             ? "after:absolute after:top-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-b after:from-background after:via-60% after:via-background after:to-transparent after:z-10 after:hidden"
             : ""
@@ -248,23 +251,25 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
       >
         {/* Tasks list */}
         <LayoutGroup>
-          {isBoard ? (
-            <TasksBoard
-              key={`${listData.id}-board`}
-              listData={listData}
-              tasks={tasks}
-              standalone={standalone}
-            />
-          ) : (
-            <TasksList
-              key={`${listData.id}-list`}
-              listData={listData}
-              tasks={tasks}
-              standalone={standalone}
-            />
-          )}
+          <AnimatePresence mode="wait">
+            {isBoard ? (
+              <TasksBoard
+                key={`${listData.id}-board`}
+                listData={listData}
+                tasks={tasks}
+                standalone={standalone}
+              />
+            ) : (
+              <TasksList
+                key={`${listData.id}-list`}
+                listData={listData}
+                tasks={tasks}
+                standalone={standalone}
+              />
+            )}
+          </AnimatePresence>
         </LayoutGroup>
-      </div>
+      </motion.div>
     </motion.section>
   );
 });

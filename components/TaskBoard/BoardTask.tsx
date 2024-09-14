@@ -18,7 +18,6 @@ type BoardTaskProps = {
 
 export const BoardTask: FC<BoardTaskProps> = memo(({ taskData }) => {
   const contentTimer = useRef<NodeJS.Timeout>();
-  const priorityTimer = useRef<NodeJS.Timeout>();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { getTaskById } = useTaskActions();
 
@@ -89,15 +88,21 @@ export const BoardTask: FC<BoardTaskProps> = memo(({ taskData }) => {
     [confirmDelete, taskData.id, taskData.listId, getTaskById]
   );
 
+  const handleDragStart = (e: any) => {
+    e.dataTransfer.setData("text/plain", taskData.id);
+  };
+
   return (
     <motion.div
       layout
+      layoutId={`task-${taskData.id}`}
       draggable={!editable}
+      onDragStart={handleDragStart}
       initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -10 }}
       transition={SpringTransition}
-      className={`group/item rounded-lg bg-background transition-colors duration-200 overflow-hidden border border-neutral-700 ${
+      className={`group/item flex-none rounded-lg bg-background transition-colors duration-200 overflow-hidden border border-neutral-700 ${
         priority === 3
           ? "order-1"
           : priority === 2
@@ -123,7 +128,7 @@ export const BoardTask: FC<BoardTaskProps> = memo(({ taskData }) => {
         <ReactTextareaAutosize
           ref={textareaRef}
           placeholder="Escribí algo..."
-          className={`text-base text-neutral-400 focus:bg-[#111] placeholder:text-[#333] bg-transparent w-full h-auto resize-none outline-none transition-colors p-2 rounded  ${
+          className={`text-base text-neutral-400 focus:bg-[#111] placeholder:text-[#333] bg-transparent w-full h-auto resize-none outline-none transition-colors overflow-hidden rounded p-2 ${
             completed ? "line-through" : ""
           } ${editable ? "cursor-text" : "pointer-events-none"}`}
           rows={1}
@@ -136,6 +141,7 @@ export const BoardTask: FC<BoardTaskProps> = memo(({ taskData }) => {
           maxLength={480}
           autoComplete="off"
           spellCheck="false"
+          id={`board-task-${taskData.id}`}
         />
 
         {/* Delete button */}

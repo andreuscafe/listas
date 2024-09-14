@@ -1,7 +1,6 @@
 import { createId } from "@paralleldrive/cuid2";
 import { list, task } from "@prisma/client";
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
 export type TasksStore = {
   lists: Omit<list, "userId">[];
@@ -22,6 +21,7 @@ export type TasksStore = {
     toggleCompleted: (id: task["id"], completed?: boolean) => boolean;
     updateTask: (id: task["id"], content: task["content"]) => void;
     setPriority: (id: task["id"], priority: task["priority"]) => void;
+    setStatus: (id: task["id"], status: task["status"]) => void;
     getListTasks: (listId: list["id"]) => Omit<task, "userId">[];
     getTaskById: (id: task["id"]) => task;
   };
@@ -145,6 +145,19 @@ export const useTasksStore = create<TasksStore>((set, get) => ({
             return {
               ...task,
               priority
+            };
+          }
+          return task;
+        })
+      })),
+    setStatus: (id, status) =>
+      set((state) => ({
+        tasks: state.tasks.map((task) => {
+          if (task.id === id) {
+            return {
+              ...task,
+              status,
+              completed: status === 3 ? true : false
             };
           }
           return task;

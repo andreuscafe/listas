@@ -102,10 +102,10 @@ export const ListTask: FC<ListTaskProps> = memo(({ taskData }) => {
 
   return (
     <motion.div
-      layout
-      initial={{ opacity: 0, x: -10 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -10 }}
+      layout="position"
+      initial={{ opacity: 0, scaleY: 1, y: -30 }}
+      animate={{ opacity: 1, scaleY: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
       transition={SpringTransition}
       className={`group/item focus-within:bg-[#111] p-2 rounded-lg transition-colors duration-200 ${
         priority === 3
@@ -189,6 +189,7 @@ export const ListTask: FC<ListTaskProps> = memo(({ taskData }) => {
           maxLength={480}
           autoComplete="off"
           spellCheck="false"
+          id={`list-task-${taskData.id}`}
         />
 
         {/* Delete button */}

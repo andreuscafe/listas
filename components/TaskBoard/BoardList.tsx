@@ -1,9 +1,10 @@
-import { SpringTransition } from "@/lib/animations";
 import { list, task } from "@prisma/client";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { FC, memo } from "react";
 import { NewItemInput } from "../NewItemInput";
 import { BoardTask } from "./BoardTask";
+import { updateTaskStatus } from "@/lib/api/tasks";
+import { useTaskActions } from "@/store";
 
 type BoardListProps = {
   listData: Omit<list, "userId">;
@@ -23,41 +24,39 @@ export const BoardList: FC<BoardListProps> = memo(
     color = "text-[#F5F5F5]",
     status
   }) => {
-    console.log(`Tasks of ${title}`, tasks);
+    const { getTaskById } = useTaskActions();
+
+    const handleDrop = (e: any) => {
+      e.preventDefault();
+      const task = getTaskById(e.dataTransfer.getData("text"));
+
+      if (task.status !== status) {
+        updateTaskStatus(e.dataTransfer.getData("text"), listData.id, status);
+      }
+    };
 
     return (
-      <motion.div
-        className="flex-1 flex flex-col gap-2 overflow-hidden relative"
-        initial={{
-          height: listData.folded && !standalone ? 0 : "auto",
-          paddingBottom: listData.folded && !standalone ? 0 : "1.5rem",
-          paddingTop: listData.folded && !standalone ? 0 : "1.5rem"
-        }}
-        animate={{
-          height: listData.folded && !standalone ? 0 : "auto",
-          paddingBottom: listData.folded && !standalone ? 0 : "1.5rem",
-          paddingTop: listData.folded && !standalone ? 0 : "1.5rem"
-        }}
-        transition={SpringTransition}
+      <div
+        onDragOver={(e) => e.preventDefault()}
+        onDropCapture={handleDrop}
+        className="flex-1 flex flex-col gap-3 relative"
       >
-        <h2 className={`font-medium ${color}`}>{title}</h2>
+        <h2 className={`font-normal text-center ${color}`}>{title}</h2>
 
-        <motion.ul
-          className={`box-content flex flex-col justify-start gap-2 overflow-hidden relative`}
-        >
+        <ul className={`flex flex-col justify-start gap-2 relative`}>
           <AnimatePresence mode="sync">
             {tasks.map((task) => (
               <BoardTask key={task.id} taskData={task} />
             ))}
-          </AnimatePresence>
 
-          <NewItemInput
-            listId={listData.id}
-            className="!order-[10001] rounded-lg overflow-hidden"
-            status={status}
-          />
-        </motion.ul>
-      </motion.div>
+            <NewItemInput
+              listId={listData.id}
+              className="!order-[10001] rounded-lg overflow-hidden flex-none"
+              status={status}
+            />
+          </AnimatePresence>
+        </ul>
+      </div>
     );
   }
 );

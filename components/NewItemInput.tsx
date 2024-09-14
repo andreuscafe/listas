@@ -2,6 +2,7 @@ import { FC, useRef } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import { createTask } from "@/lib/api/tasks";
 import { list } from "@prisma/client";
+import { motion } from "framer-motion";
 
 type NewItemInputProps = {
   listId: list["id"];
@@ -24,8 +25,6 @@ export const NewItemInput: FC<NewItemInputProps> = ({
         return;
       }
 
-      console.log(`Creating task with status ${status}`);
-
       const newTask = await createTask(listId, e.currentTarget.value, status);
 
       if (!newTask) {
@@ -39,7 +38,9 @@ export const NewItemInput: FC<NewItemInputProps> = ({
   };
 
   return (
-    <li
+    <motion.li
+      key={`new-task-${listId}`}
+      layout="preserve-aspect"
       className={`relative flex gap-1 items-start leading-6 group/item ${className}`}
     >
       <TextareaAutosize
@@ -49,8 +50,8 @@ export const NewItemInput: FC<NewItemInputProps> = ({
         rows={1}
         onKeyDown={handleKeyDown}
         maxLength={480}
-        id="new-task-input"
+        id={status ? `new-task-${listId}-${status}` : `new-task-${listId}`}
       />
-    </li>
+    </motion.li>
   );
 };

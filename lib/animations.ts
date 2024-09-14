@@ -1,6 +1,8 @@
-export const SpringTransition = {
+import { Transition } from "framer-motion";
+
+export const SpringTransition: Transition = {
   type: "spring",
-  stiffness: 300,
+  stiffness: 250,
   damping: 30
 };
 

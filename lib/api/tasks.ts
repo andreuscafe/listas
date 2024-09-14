@@ -151,3 +151,37 @@ export const updateTaskPriority = async (id: string, priority: number) => {
     alert("Error al actualizar la tarea, actualiza la página.");
   }
 };
+
+export const updateTaskStatus = async (
+  id: string,
+  listId: string,
+  status: number
+) => {
+  const { setStatus } = useTasksStore.getState().taskActions;
+
+  setStatus(id, status);
+
+  dispatchEvent("completetask", {
+    taskId: id,
+    listId: listId
+  });
+
+  const res = await fetch("/api/tasks", {
+    method: "PUT",
+    body: JSON.stringify({
+      id,
+      status,
+      completed: status === 3 ? true : false
+    }),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
+
+  if (res.ok) {
+    const updatedTask = await res.json();
+    return updatedTask;
+  } else {
+    alert("Error al actualizar la tarea, actualiza la página.");
+  }
+};
