@@ -3,6 +3,6 @@
   "plugins": ["unused-imports"],
   "rules": {
     // otras reglas...
-    "unused-imports/no-unused-imports": "warning"
+    "unused-imports/no-unused-imports": "warn"
   }
 }

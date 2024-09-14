@@ -1,5 +1,4 @@
 import { Header } from "@/components";
-import { useUser } from "@clerk/nextjs";
 
 type LayoutProps = {
   children: React.ReactNode;

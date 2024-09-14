@@ -214,4 +214,4 @@ export const ListTask: FC<ListTaskProps> = memo(({ taskData }) => {
   );
 });
 
-ListTask.displayName = "Task";
+ListTask.displayName = "ListTask";

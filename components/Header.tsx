@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { UserButton, useUser } from "@clerk/nextjs";
-import { BiColumns, BiListUl, BiLoaderAlt } from "react-icons/bi";
+import { BiLoaderAlt } from "react-icons/bi";
 import { dark } from "@clerk/themes";
 import { usePathname } from "next/navigation";
 
