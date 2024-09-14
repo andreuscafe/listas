@@ -53,6 +53,7 @@ export const BoardList: FC<BoardListProps> = memo(
               listId={listData.id}
               className="!order-[10001] rounded-lg overflow-hidden flex-none"
               status={status}
+              outlined
             />
           </AnimatePresence>
         </ul>

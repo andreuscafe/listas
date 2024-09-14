@@ -8,12 +8,14 @@ type NewItemInputProps = {
   listId: list["id"];
   className?: string;
   status?: 1 | 2 | 3;
+  outlined?: boolean;
 };
 
 export const NewItemInput: FC<NewItemInputProps> = ({
   listId,
   className,
-  status
+  status,
+  outlined = false
 }) => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -41,12 +43,16 @@ export const NewItemInput: FC<NewItemInputProps> = ({
     <motion.li
       key={`new-task-${listId}`}
       layout="preserve-aspect"
-      className={`relative flex gap-1 items-start leading-6 group/item ${className}`}
+      className={`relative flex gap-1 items-start leading-6 group/item ${className} ${
+        outlined ? "border border-neutral-800" : ""
+      }`}
     >
       <TextareaAutosize
         ref={textAreaRef}
         placeholder="Escribí algo..."
-        className="text-base placeholder:text-[#666] text-neutral-400 bg-transparent w-full resize-none outline-none focus:bg-white focus:bg-opacity-5 py-1 px-2 rounded"
+        className={`text-base placeholder:text-neutral-700 text-neutral-400 bg-transparent w-full resize-none outline-none py-1 px-2 rounded ${
+          !outlined ? "focus:bg-white focus:bg-opacity-5" : "py-2"
+        }`}
         rows={1}
         onKeyDown={handleKeyDown}
         maxLength={480}
