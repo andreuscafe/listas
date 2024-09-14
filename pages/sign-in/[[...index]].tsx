@@ -1,5 +1,4 @@
 import { Header } from "@/components";
-import { Layout } from "@/components/Layout";
 import { SignIn } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 

@@ -12,7 +12,11 @@ export const getTasks = async () => {
   }
 };
 
-export const createTask = async (listId: string, content?: string) => {
+export const createTask = async (
+  listId: string,
+  content?: string,
+  status?: 1 | 2 | 3
+) => {
   const { addTask } = useTasksStore.getState().taskActions;
 
   const newTask = {
@@ -20,8 +24,9 @@ export const createTask = async (listId: string, content?: string) => {
     listId,
     content: content || "",
     createdAt: new Date(),
-    completed: false,
-    priority: 0
+    completed: status === 3 ? true : false,
+    priority: 0,
+    status: status ? status : 1
   } as unknown as task;
 
   addTask(listId, newTask);
@@ -48,14 +53,23 @@ export const createTask = async (listId: string, content?: string) => {
   }
 };
 
-export const completeTask = async (id: string) => {
+export const completeTask = async (
+  id: string,
+  listId: string,
+  completed?: boolean
+) => {
   const { toggleCompleted } = useTasksStore.getState().taskActions;
 
-  const completed = toggleCompleted(id);
+  toggleCompleted(id, completed);
+
+  dispatchEvent("completetask", {
+    taskId: id,
+    listId: listId
+  });
 
   const res = await fetch("/api/tasks", {
     method: "PUT",
-    body: JSON.stringify({ id, completed }),
+    body: JSON.stringify({ id, completed, status: completed ? 3 : 2 }),
     headers: {
       "Content-Type": "application/json"
     }
@@ -131,6 +145,40 @@ export const updateTaskPriority = async (id: string, priority: number) => {
   if (res.ok) {
     setPriority(id, priority);
 
+    const updatedTask = await res.json();
+    return updatedTask;
+  } else {
+    alert("Error al actualizar la tarea, actualiza la página.");
+  }
+};
+
+export const updateTaskStatus = async (
+  id: string,
+  listId: string,
+  status: number
+) => {
+  const { setStatus } = useTasksStore.getState().taskActions;
+
+  setStatus(id, status);
+
+  dispatchEvent("completetask", {
+    taskId: id,
+    listId: listId
+  });
+
+  const res = await fetch("/api/tasks", {
+    method: "PUT",
+    body: JSON.stringify({
+      id,
+      status,
+      completed: status === 3 ? true : false
+    }),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
+
+  if (res.ok) {
     const updatedTask = await res.json();
     return updatedTask;
   } else {

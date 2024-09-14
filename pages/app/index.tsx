@@ -11,6 +11,7 @@ import { User, getAuth } from "@clerk/nextjs/server";
 import { GetServerSideProps } from "next";
 import { Layout } from "@/components/Layout";
 import { defaultTitle } from "../_app";
+import { SpringTransition } from "@/lib/animations";
 
 const phrases = [
   // "La vida es una colección de momentos, asegúrate de vivir cada uno.",
@@ -87,23 +88,24 @@ export default function App({ listsData }: AppProps) {
         </section>
 
         <LayoutGroup>
-          <AnimatePresence mode="sync">
+          <AnimatePresence mode="sync" initial={false}>
             {lists?.map((list) => (
               <List key={list.id} listData={list} />
             ))}
-          </AnimatePresence>
 
-          <motion.button
-            layout
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.4 }}
-            exit={{ opacity: 0 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-full py-6 opacity-40 hover:!opacity-100 transition-opacity rounded-2xl border-[2px] border-white border-opacity-20"
-            onClick={handleCreateList}
-          >
-            Agregar lista
-          </motion.button>
+            <motion.button
+              layout
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.4 }}
+              exit={{ opacity: 0 }}
+              whileTap={{ scale: 0.95 }}
+              className="w-full py-6 opacity-40 hover:!opacity-100 transition-opacity rounded-2xl border-[2px] border-white border-opacity-20"
+              onClick={handleCreateList}
+              transition={SpringTransition}
+            >
+              Agregar lista
+            </motion.button>
+          </AnimatePresence>
         </LayoutGroup>
       </Layout>
     </>

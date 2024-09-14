@@ -2,12 +2,19 @@ import { FC, useRef } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import { createTask } from "@/lib/api/tasks";
 import { list } from "@prisma/client";
+import { motion } from "framer-motion";
 
 type NewItemInputProps = {
   listId: list["id"];
+  className?: string;
+  status?: 1 | 2 | 3;
 };
 
-export const NewItemInput: FC<NewItemInputProps> = ({ listId }) => {
+export const NewItemInput: FC<NewItemInputProps> = ({
+  listId,
+  className,
+  status
+}) => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -18,7 +25,7 @@ export const NewItemInput: FC<NewItemInputProps> = ({ listId }) => {
         return;
       }
 
-      const newTask = await createTask(listId, e.currentTarget.value);
+      const newTask = await createTask(listId, e.currentTarget.value, status);
 
       if (!newTask) {
         return;
@@ -31,8 +38,11 @@ export const NewItemInput: FC<NewItemInputProps> = ({ listId }) => {
   };
 
   return (
-    <li className={`relative flex gap-1 items-start leading-6 group/item`}>
-      {/* <BiCircle size={36} className="flex-shrink-0 opacity-20" /> */}
+    <motion.li
+      key={`new-task-${listId}`}
+      layout="preserve-aspect"
+      className={`relative flex gap-1 items-start leading-6 group/item ${className}`}
+    >
       <TextareaAutosize
         ref={textAreaRef}
         placeholder="Escribí algo..."
@@ -40,8 +50,8 @@ export const NewItemInput: FC<NewItemInputProps> = ({ listId }) => {
         rows={1}
         onKeyDown={handleKeyDown}
         maxLength={480}
-        id="new-task-input"
+        id={status ? `new-task-${listId}-${status}` : `new-task-${listId}`}
       />
-    </li>
+    </motion.li>
   );
 };

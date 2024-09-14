@@ -1,4 +1,3 @@
-import { Header } from "@/components";
 import Image from "next/image";
 import Link from "next/link";
 import mobileCover from "@/public/img/phone-cover.png";
@@ -8,7 +7,6 @@ import { basicRevealAnimation } from "@/lib/animations";
 export default function Home() {
   return (
     <main className={`min-h-screen font-inter pb-16`}>
-      {/* <Header /> */}
       <section className="max-w-screen-lg mx-auto py-24 px-8 flex flex-col items-center justify-center gap-12">
         <div className="flex flex-col items-center">
           <motion.h1

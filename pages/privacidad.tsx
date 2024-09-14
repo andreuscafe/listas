@@ -15,7 +15,7 @@ const Privacidad: React.FC = () => {
           Volver
         </Link>
       </Header>
-      <section className="max-w-screen-sm mx-auto py-24 px-8 gap-12 text-neutral-500 privacidad">
+      <section className="max-w-screen-md mx-auto py-24 px-8 gap-12 text-neutral-500 privacidad">
         <h1 className="text-3xl text-foreground mb-8">
           Política de Privacidad
         </h1>

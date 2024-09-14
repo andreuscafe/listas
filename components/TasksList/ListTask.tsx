@@ -13,17 +13,19 @@ import ReactTextareaAutosize from "react-textarea-autosize";
 import { motion } from "framer-motion";
 import { SpringTransition } from "@/lib/animations";
 
-type TaskProps = {
+type ListTaskProps = {
   taskData: Omit<task, "userId">;
 };
 
-export const Task: FC<TaskProps> = memo(({ taskData }) => {
+export const ListTask: FC<ListTaskProps> = memo(({ taskData }) => {
   const contentTimer = useRef<NodeJS.Timeout>();
   const priorityTimer = useRef<NodeJS.Timeout>();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { getTaskById } = useTaskActions();
 
-  const [completed, setCompleted] = useState(taskData.completed);
+  const [completed, setCompleted] = useState(
+    taskData.completed || taskData.status === 3
+  );
   const [priority, setPriority] = useState(taskData.priority);
 
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -69,7 +71,7 @@ export const Task: FC<TaskProps> = memo(({ taskData }) => {
 
   const handleComplete = async (id: task["id"]) => {
     setCompleted(!completed);
-    await completeTask(id);
+    await completeTask(id, taskData.listId, !completed);
   };
 
   const handleDeleteButton = useCallback(async () => {
@@ -100,10 +102,10 @@ export const Task: FC<TaskProps> = memo(({ taskData }) => {
 
   return (
     <motion.div
-      layout
-      initial={{ opacity: 0, x: -10 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -10 }}
+      layout="position"
+      initial={{ opacity: 0, scaleY: 1, y: -30 }}
+      animate={{ opacity: 1, scaleY: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
       transition={SpringTransition}
       className={`group/item focus-within:bg-[#111] p-2 rounded-lg transition-colors duration-200 ${
         priority === 3
@@ -187,6 +189,7 @@ export const Task: FC<TaskProps> = memo(({ taskData }) => {
           maxLength={480}
           autoComplete="off"
           spellCheck="false"
+          id={`list-task-${taskData.id}`}
         />
 
         {/* Delete button */}
@@ -211,4 +214,4 @@ export const Task: FC<TaskProps> = memo(({ taskData }) => {
   );
 });
 
-Task.displayName = "Task";
+ListTask.displayName = "ListTask";

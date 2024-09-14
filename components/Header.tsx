@@ -2,9 +2,11 @@ import Link from "next/link";
 import { UserButton, useUser } from "@clerk/nextjs";
 import { BiLoaderAlt } from "react-icons/bi";
 import { dark } from "@clerk/themes";
+import { usePathname } from "next/navigation";
 
 export const Header = ({ children }: { children?: React.ReactNode }) => {
   const { isLoaded, isSignedIn } = useUser();
+  const pathname = usePathname();
 
   const now = new Date().toLocaleDateString("es-ES", {
     month: "short",
@@ -14,11 +16,13 @@ export const Header = ({ children }: { children?: React.ReactNode }) => {
 
   return (
     <header
-      className={"w-full fixed z-20 top-0 left-0 border-b border-b-neutral-700"}
+      className={
+        "w-full fixed z-20 top-0 left-0 border-b-2 border-b-neutral-700"
+      }
     >
       <div
         className={
-          "max-w-screen-sm mx-auto h-16 px-6 flex items-center justify-between relative bg-background"
+          "max-w-screen-md mx-auto h-16 px-6 flex items-center justify-between relative bg-background"
         }
       >
         {children ? (

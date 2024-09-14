@@ -1,12 +1,17 @@
 import { useTaskActions } from "@/store";
 import { FC, memo, useCallback, useEffect, useRef, useState } from "react";
-import { BiChevronDown, BiRightTopArrowCircle, BiX } from "react-icons/bi";
-import { Task } from "./Task";
-import { NewItemInput } from "./NewItemInput";
+import {
+  BiArrowBack,
+  BiBarChartSquare,
+  BiChevronDown,
+  BiX
+} from "react-icons/bi";
 import { deleteListById, foldList, updateList } from "@/lib/api/lists";
 import { useRouter } from "next/router";
 import { list } from "@prisma/client";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import { TasksList } from "./TasksList";
+import { TasksBoard } from "./TaskBoard";
 import { SpringTransition } from "@/lib/animations";
 
 type ListProps = {
@@ -18,6 +23,7 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
   const router = useRouter();
 
   const [listTitle, setListTitle] = useState(listData.title);
+  const [isBoard, setIsBoard] = useState(false);
 
   const { getListTasks } = useTaskActions();
 
@@ -99,13 +105,19 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
       });
   }, [listData]);
 
+  const handleSetBoard = useCallback(() => {
+    setIsBoard(!isBoard);
+  }, [isBoard]);
+
   useEffect(() => {
     if (window) {
       window.removeEventListener("newtask", refreshTasks as EventListener);
       window.removeEventListener("removedtask", refreshTasks as EventListener);
+      window.removeEventListener("completetask", refreshTasks as EventListener);
 
       window.addEventListener("newtask", refreshTasks as EventListener);
       window.addEventListener("removedtask", refreshTasks as EventListener);
+      window.addEventListener("completetask", refreshTasks as EventListener);
     }
 
     return () => {
@@ -113,6 +125,10 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
         window.removeEventListener("newtask", refreshTasks as EventListener);
         window.removeEventListener(
           "removedtask",
+          refreshTasks as EventListener
+        );
+        window.removeEventListener(
+          "completetask",
           refreshTasks as EventListener
         );
       }
@@ -136,16 +152,12 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
           duration: 0.3
         }
       }}
-      transition={{
-        type: "spring",
-        stiffness: 300,
-        damping: 30
-      }}
+      transition={SpringTransition}
       layout="position"
       className="relative"
     >
       {/* Header */}
-      <nav className="absolute z-10 top-0 -translate-y-1/2 w-full flex justify-between px-4">
+      <nav className="absolute z-10 top-0 -translate-y-1/2 w-full flex justify-between px-[0.6rem]">
         <div className="block relative bg-background">
           <h4 className="text-base inline p-4 whitespace-pre opacity-0">
             {listTitle}
@@ -162,6 +174,18 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
         </div>
 
         <div className="flex">
+          <button
+            className="p-2 bg-background rounded-lg transition-colors duration-300 group"
+            onClick={handleSetBoard}
+          >
+            <BiBarChartSquare
+              size={24}
+              className={`opacity-40 group-hover:opacity-100 transition-all duration-300 scale-90 rotate-180 ${
+                isBoard ? "rotate-90" : ""
+              }`}
+            />
+          </button>
+
           {!standalone && (
             <button
               className={`p-2 bg-background rounded-lg transition-colors duration-300 group`}
@@ -169,9 +193,9 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
                 router.push(`/app/list/${listData.id}`);
               }}
             >
-              <BiRightTopArrowCircle
+              <BiArrowBack
                 size={24}
-                className="opacity-40 group-hover:opacity-100 transition-opacity"
+                className="opacity-40 group-hover:opacity-100 transition-opacity scale-90 rotate-[135deg]"
               />
             </button>
           )}
@@ -208,8 +232,14 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
       </nav>
 
       {/* Wrapper */}
-      <div
-        className={`mb-10 rounded-2xl backdrop-blur-xl border-neutral-700 relative overflow-hidden ${
+      <motion.div
+        layout
+        transition={SpringTransition}
+        animate={{
+          originX: 0,
+          originY: 0
+        }}
+        className={`mb-10 rounded-2xl bg-background border-neutral-700 relative overflow-hidden ${
           tasks.length
             ? "after:absolute after:top-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-b after:from-background after:via-60% after:via-background after:to-transparent after:z-10 after:hidden"
             : ""
@@ -221,30 +251,25 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
       >
         {/* Tasks list */}
         <LayoutGroup>
-          <motion.ul
-            initial={{
-              height: listData.folded && !standalone ? 0 : "auto",
-              paddingBottom: listData.folded && !standalone ? 0 : "1.5rem",
-              paddingTop: listData.folded && !standalone ? 0 : "1.5rem"
-            }}
-            animate={{
-              height: listData.folded && !standalone ? 0 : "auto",
-              paddingBottom: listData.folded && !standalone ? 0 : "1.5rem",
-              paddingTop: listData.folded && !standalone ? 0 : "1.5rem"
-            }}
-            transition={SpringTransition}
-            className={`px-6 box-content flex flex-col justify-start gap-2 overflow-hidden relative`}
-          >
-            <AnimatePresence mode="sync">
-              {tasks.map((task) => (
-                <Task key={task.id} taskData={task} />
-              ))}
-            </AnimatePresence>
-
-            {!tasks.length && <NewItemInput listId={listData.id} />}
-          </motion.ul>
+          <AnimatePresence mode="wait">
+            {isBoard ? (
+              <TasksBoard
+                key={`${listData.id}-board`}
+                listData={listData}
+                tasks={tasks}
+                standalone={standalone}
+              />
+            ) : (
+              <TasksList
+                key={`${listData.id}-list`}
+                listData={listData}
+                tasks={tasks}
+                standalone={standalone}
+              />
+            )}
+          </AnimatePresence>
         </LayoutGroup>
-      </div>
+      </motion.div>
     </motion.section>
   );
 });

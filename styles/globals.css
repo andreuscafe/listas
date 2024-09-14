@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  font-family: var(--font-inter);
+  font-weight: 300;
+}
+
 :root {
   --color-background: #18181b;
   --color-foreground: #cecece;
