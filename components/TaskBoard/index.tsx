@@ -34,7 +34,7 @@ export const TasksBoard: FC<TasksBoardProps> = ({
       }}
       transition={SpringTransition}
     >
-      <motion.div layout="position" className="flex p-6 gap-6">
+      <motion.div layout="position" className="flex p-6 pt-8 gap-6">
         <LayoutGroup>
           <BoardList
             key={`${listData.id}-1`}

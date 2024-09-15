@@ -157,9 +157,9 @@ export const List: FC<ListProps> = memo(({ listData, standalone = false }) => {
       className="relative"
     >
       {/* Header */}
-      <nav className="absolute z-10 top-0 -translate-y-1/2 w-full flex justify-between px-[0.6rem]">
+      <nav className="absolute z-10 top-0 -translate-y-1/2 w-full flex justify-between px-4">
         <div className="block relative bg-background">
-          <h4 className="text-base inline p-4 whitespace-pre opacity-0">
+          <h4 className="text-base inline px-2.5 whitespace-pre opacity-0">
             {listTitle}
           </h4>
           <input

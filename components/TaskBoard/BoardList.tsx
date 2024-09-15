@@ -41,7 +41,7 @@ export const BoardList: FC<BoardListProps> = memo(
         onDropCapture={handleDrop}
         className="flex-1 flex flex-col gap-3 relative"
       >
-        <h2 className={`font-normal text-center ${color}`}>{title}</h2>
+        <h2 className={`font-normal ${color}`}>{title}</h2>
 
         <ul className={`flex flex-col justify-start gap-2 relative`}>
           <AnimatePresence mode="sync">
