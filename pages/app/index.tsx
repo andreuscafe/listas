@@ -91,7 +91,7 @@ export default function App({ listsData }: AppProps) {
 
       <AnimatePresence>{isClockViewOpen && <ClockView />}</AnimatePresence>
 
-      <Layout>
+      <Layout className={isClockViewOpen ? "pt-[100vh]" : ""}>
         <section className="max-w-screen-lg mx-auto py-10 block w-full text-center">
           <p className="text-neutral-600">{clientPhrase}</p>
         </section>

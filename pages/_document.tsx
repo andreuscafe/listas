@@ -4,7 +4,10 @@ export default function Document() {
   return (
     <Html lang="en" className="bg-background">
       <Head />
-      <body className="bg-background text-foreground" onClick={() => {}}>
+      <body
+        className="bg-background text-foreground overflow-x-hidden"
+        onClick={() => {}}
+      >
         <Main />
         <NextScript />
       </body>
