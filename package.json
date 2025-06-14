@@ -8,7 +8,9 @@
     "dev": "prisma generate && next dev",
     "build": "prisma generate && prisma db push --accept-data-loss && prisma db seed && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "electron-dev": "electron electron-main.js --dev",
+    "electron-prod": "electron electron-main.js --prod"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
@@ -45,6 +47,7 @@
     "zustand": "^4.4.6"
   },
   "devDependencies": {
+    "electron": "^28.0.0",
     "eslint-plugin-unused-imports": "^3.1.0"
   }
 }
